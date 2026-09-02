@@ -1,4 +1,8 @@
-require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
+// Load .env in local dev (on Render/Netlify env vars are injected directly)
+try {
+  require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
+} catch (_) {}
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
