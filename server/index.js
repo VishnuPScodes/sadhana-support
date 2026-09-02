@@ -42,8 +42,8 @@ app.get('/health', (req, res) => res.json({ status: 'OK', timestamp: new Date() 
 if (isProduction) {
   const clientBuild = path.join(__dirname, '../client/dist');
   app.use(express.static(clientBuild));
-  // Catch-all: let React Router handle all non-API routes
-  app.get('*', (req, res) => {
+  // Catch-all: send index.html for all non-API routes (React Router handles them)
+  app.use((req, res) => {
     res.sendFile(path.join(clientBuild, 'index.html'));
   });
 }
