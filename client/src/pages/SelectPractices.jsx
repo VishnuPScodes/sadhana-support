@@ -1,0 +1,123 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import api from '../api';
+
+const ALL_PRACTICES = [
+  { id: 'shoonya',    name: 'Shoonya Meditation',  icon: '🌌', desc: 'Inner stillness' },
+  { id: 'shambhavi', name: 'Shambhavi Mahamudra', icon: '👁️', desc: 'Mystical practice' },
+  { id: 'shakti',    name: 'Shakti Chalana Kriya',icon: '⚡', desc: 'Energy activation' },
+  { id: 'surya',     name: 'Surya Kriya',          icon: '☀️', desc: 'Solar vitality' },
+  { id: 'yogasanas', name: 'Yogasanas',             icon: '🧘', desc: 'Physical postures' },
+  { id: 'angamardana',name: 'Angamardana',          icon: '💪', desc: 'Physical fitness' },
+  { id: 'sukha',     name: 'Sukha Kriya',           icon: '🌿', desc: 'Gentle practice' },
+  { id: 'samyama',   name: 'Samyama Sadhana',       icon: '🪷', desc: 'Deep absorption' },
+  { id: 'breath',    name: 'Breath Watching',        icon: '🌬️', desc: 'Mindful breathing' },
+  { id: 'suryashakti',name: 'Surya Shakti',          icon: '🌟', desc: 'Solar energy flow' },
+  { id: 'bhastrika', name: 'Bhastrika Kriya',        icon: '💨', desc: 'Energizing breath' },
+];
+
+export default function SelectPractices() {
+  const { updateUser } = useAuth();
+  const navigate = useNavigate();
+
+  const [selected, setSelected] = useState([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const togglePractice = (name) => {
+    setSelected(prev =>
+      prev.includes(name)
+        ? prev.filter(p => p !== name)
+        : [...prev, name]
+    );
+    setError('');
+  };
+
+  const handleSubmit = async () => {
+    if (selected.length === 0) {
+      return setError('Please select at least one practice');
+    }
+
+    setLoading(true);
+    try {
+      const { data } = await api.post('/user/practices', { practices: selected });
+      updateUser({ selectedPractices: data.selectedPractices, practicesSelected: true });
+      navigate('/tracker');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to save practices');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="page">
+      <div className="container-lg animate-in" style={{ padding: '24px 16px' }}>
+        <div className="glass-card">
+          <div className="brand">
+            <div className="brand-icon">🧘</div>
+            <h1 className="brand-title">Your Practices</h1>
+            <p className="brand-subtitle" style={{ marginBottom: 0 }}>
+              Select the sadhanas you wish to track daily
+            </p>
+          </div>
+
+          {selected.length > 0 && (
+            <div
+              className="alert alert-success animate-in"
+              style={{ marginBottom: 20 }}
+            >
+              ✓ {selected.length} practice{selected.length > 1 ? 's' : ''} selected
+            </div>
+          )}
+
+          {error && (
+            <div className="alert alert-error">⚠️ {error}</div>
+          )}
+
+          <div className="practices-grid">
+            {ALL_PRACTICES.map((practice, i) => (
+              <div
+                key={practice.id}
+                id={`practice-option-${practice.id}`}
+                className={`practice-option animate-in animate-in-delay-${Math.min(i + 1, 3)} ${
+                  selected.includes(practice.name) ? 'selected' : ''
+                }`}
+                onClick={() => togglePractice(practice.name)}
+                role="checkbox"
+                aria-checked={selected.includes(practice.name)}
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && togglePractice(practice.name)}
+              >
+                <div className="practice-option-check">
+                  {selected.includes(practice.name) && (
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6L5 9L10 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div className="practice-option-name">{practice.name}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
+                    {practice.desc}
+                  </div>
+                </div>
+                <span className="practice-option-icon">{practice.icon}</span>
+              </div>
+            ))}
+          </div>
+
+          <button
+            id="save-practices-btn"
+            className="btn btn-primary"
+            onClick={handleSubmit}
+            disabled={loading || selected.length === 0}
+          >
+            {loading ? <span className="spinner" /> : `Continue with ${selected.length} practice${selected.length !== 1 ? 's' : ''} →`}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
