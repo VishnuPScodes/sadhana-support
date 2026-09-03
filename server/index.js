@@ -16,18 +16,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const isProduction = process.env.NODE_ENV === 'production';
 
-// ─── CORS ─────────────────────────────────────────────────────────────────────
-// In production the frontend is served by this same Express server,
-// so CORS is only needed in development. CORS_ORIGIN lets you whitelist
-// a separate frontend URL (e.g. a Vercel preview) if needed.
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:3000',
-  process.env.CORS_ORIGIN,        // set in deployment env vars if needed
-].filter(Boolean);
-
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors());
 app.use(express.json());
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
