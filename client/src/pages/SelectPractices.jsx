@@ -18,12 +18,18 @@ const ALL_PRACTICES = [
 ];
 
 export default function SelectPractices() {
-  const { updateUser } = useAuth();
+  const { user, updateUser } = useAuth();
   const navigate = useNavigate();
 
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState(() => user?.selectedPractices || []);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (user?.selectedPractices && user.selectedPractices.length > 0) {
+      setSelected(user.selectedPractices);
+    }
+  }, [user?.selectedPractices]);
 
   const togglePractice = (name) => {
     setSelected(prev =>
@@ -51,15 +57,21 @@ export default function SelectPractices() {
     }
   };
 
+  const isEditing = Boolean(user?.practicesSelected);
+
   return (
-    <div className="page">
+    <div className="page" style={{ paddingTop: isEditing ? 90 : 20 }}>
       <div className="container-lg animate-in" style={{ padding: '24px 16px' }}>
         <div className="glass-card">
           <div className="brand">
             <div className="brand-icon">🧘</div>
-            <h1 className="brand-title">Your Practices</h1>
+            <h1 className="brand-title">
+              {isEditing ? 'Edit Your Practices' : 'Your Practices'}
+            </h1>
             <p className="brand-subtitle" style={{ marginBottom: 0 }}>
-              Select the sadhanas you wish to track daily
+              {isEditing
+                ? 'Add or remove sadhanas from your daily monitoring list'
+                : 'Select the sadhanas you wish to track daily'}
             </p>
           </div>
 
@@ -108,14 +120,33 @@ export default function SelectPractices() {
             ))}
           </div>
 
-          <button
-            id="save-practices-btn"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-            disabled={loading || selected.length === 0}
-          >
-            {loading ? <span className="spinner" /> : `Continue with ${selected.length} practice${selected.length !== 1 ? 's' : ''} →`}
-          </button>
+          <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
+            {isEditing && (
+              <button
+                type="button"
+                className="btn btn-outline"
+                style={{ flex: 1 }}
+                onClick={() => navigate('/tracker')}
+              >
+                ← Back
+              </button>
+            )}
+            <button
+              id="save-practices-btn"
+              className="btn btn-primary"
+              style={{ flex: 2 }}
+              onClick={handleSubmit}
+              disabled={loading || selected.length === 0}
+            >
+              {loading ? (
+                <span className="spinner" />
+              ) : isEditing ? (
+                `Save Changes (${selected.length})`
+              ) : (
+                `Continue with ${selected.length} practice${selected.length !== 1 ? 's' : ''} →`
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

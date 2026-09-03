@@ -35,6 +35,13 @@ export default function Navbar() {
           🧘 Today
         </Link>
         <Link
+          to="/select-practices"
+          className={`nav-link ${isActive('/select-practices') ? 'nav-link-active' : ''}`}
+          id="nav-select-practices"
+        >
+          ⚙️ Practices
+        </Link>
+        <Link
           to="/progress"
           className={`nav-link ${isActive('/progress') ? 'nav-link-active' : ''}`}
           id="nav-progress"

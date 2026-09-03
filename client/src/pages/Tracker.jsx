@@ -183,6 +183,19 @@ export default function Tracker() {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   });
 
+  // ── Sync practices when user.selectedPractices updates ───────────────────
+  useEffect(() => {
+    if (user?.selectedPractices) {
+      setPractices(prev => {
+        const prevMap = new Map(prev.map(p => [p.name, p.count]));
+        return user.selectedPractices.map(name => ({
+          name,
+          count: prevMap.get(name) || 0
+        }));
+      });
+    }
+  }, [user?.selectedPractices]);
+
   // ── Check on mount if today is already submitted ──────────────────────────
   useEffect(() => {
     const checkToday = async () => {
@@ -299,12 +312,22 @@ export default function Tracker() {
         <div className="container-lg animate-in">
           <div className="glass-card">
             {/* Header */}
-            <div className="tracker-header">
-              <div className="date-badge">📅 {today}</div>
-              <h1 className="page-title">Today's Sadhana</h1>
-              <p className="page-desc" style={{ marginBottom: 0 }}>
-                Tap a practice once or twice to record your session
-              </p>
+            <div className="tracker-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
+              <div>
+                <div className="date-badge">📅 {today}</div>
+                <h1 className="page-title">Today's Sadhana</h1>
+                <p className="page-desc" style={{ marginBottom: 0 }}>
+                  Tap a practice once or twice to record your session
+                </p>
+              </div>
+              <Link
+                to="/select-practices"
+                className="btn btn-outline"
+                style={{ fontSize: 13, padding: '8px 14px', textDecoration: 'none' }}
+                id="edit-practices-link"
+              >
+                ⚙️ Edit Practices
+              </Link>
             </div>
 
             {/* Progress */}
