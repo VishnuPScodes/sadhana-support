@@ -38,15 +38,8 @@ app.use('/api/sadhana', sadhanaRoutes);
 // ─── Health check ─────────────────────────────────────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'OK', timestamp: new Date() }));
 
-// ─── Serve React build in production ─────────────────────────────────────────
-if (isProduction) {
-  const clientBuild = path.join(__dirname, '../client/dist');
-  app.use(express.static(clientBuild));
-  // Catch-all: send index.html for all non-API routes (React Router handles them)
-  app.use((req, res) => {
-    res.sendFile(path.join(clientBuild, 'index.html'));
-  });
-}
+// API-only server — frontend is served by Netlify
+// (static file serving removed)
 
 // ─── MongoDB + Start ──────────────────────────────────────────────────────────
 mongoose
