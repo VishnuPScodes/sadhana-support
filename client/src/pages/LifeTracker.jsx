@@ -440,20 +440,35 @@ export default function LifeTracker() {
                   <span className="question-icon" style={{ fontSize: 36 }}>{currentQ.icon}</span>
                   <div className="question-text-box">
                     <span className="question-tag">Question {currentQ.num} · {currentQ.title}</span>
-                    <h3 className="question-title" style={{ fontSize: 18 }}>{currentQ.question}</h3>
+                    <h3 className="question-title" style={{ fontSize: 'clamp(15px, 4vw, 18px)' }}>
+                      {currentQ.question.split(' ').map((word, wIdx) => (
+                        <span
+                          key={`${word}-${wIdx}-${currentStep}`}
+                          className="animated-word"
+                          style={{ '--word-idx': wIdx }}
+                        >
+                          {word}{' '}
+                        </span>
+                      ))}
+                    </h3>
                   </div>
                 </div>
 
                 <div className="question-options-row" style={{ marginTop: 20 }}>
-                  {currentQ.options.map((opt) => {
+                  {currentQ.options.map((opt, optIdx) => {
                     const isSelected = answers[currentQ.key] === opt.value;
+                    const wordsCount = currentQ.question.split(' ').length;
+                    const optDelayMs = wordsCount * 80 + optIdx * 70 + 120;
                     return (
                       <button
                         key={String(opt.value)}
                         type="button"
                         className={`life-opt-btn ${isSelected ? 'active' : ''}`}
                         onClick={() => handleSelectOption(currentQ.key, opt.value, currentStep)}
-                        style={{ padding: '14px 16px' }}
+                        style={{
+                          padding: '14px 16px',
+                          animationDelay: `${optDelayMs}ms`,
+                        }}
                       >
                         <span className="opt-label">{opt.label}</span>
                       </button>

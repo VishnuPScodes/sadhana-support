@@ -1784,6 +1784,32 @@ h1.page-title {
   animation: slideInFromLeft 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* ─── Word-by-Word Reading Pace Reveal Animation ─────────────────────────── */
+.animated-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(6px) scale(0.96);
+  filter: blur(3px);
+  animation: wordReveal 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--word-idx, 0) * 80ms + 120ms);
+  will-change: opacity, transform, filter;
+  white-space: pre;
+}
+
+@keyframes wordReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+
 
 
 
