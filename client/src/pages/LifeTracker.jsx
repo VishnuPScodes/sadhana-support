@@ -137,17 +137,29 @@ function HandwritingText({ text, speed = 65, onComplete }) {
   useEffect(() => {
     setDisplayedLength(0);
     let index = 0;
+    let timer = null;
+    let completionTimer = null;
 
-    const timer = setInterval(() => {
-      index++;
-      setDisplayedLength(index);
-      if (index >= text.length) {
-        clearInterval(timer);
-        if (onComplete) onComplete();
-      }
-    }, speed);
+    // Small initial delay so card slide-in completes before writing starts
+    const startDelay = setTimeout(() => {
+      timer = setInterval(() => {
+        index++;
+        setDisplayedLength(index);
+        if (index >= text.length) {
+          clearInterval(timer);
+          // Breathing pause after full question is written before revealing option buttons
+          completionTimer = setTimeout(() => {
+            if (onComplete) onComplete();
+          }, 450);
+        }
+      }, speed);
+    }, 180);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearTimeout(startDelay);
+      if (timer) clearInterval(timer);
+      if (completionTimer) clearTimeout(completionTimer);
+    };
   }, [text, speed]);
 
   const visibleText = text.slice(0, displayedLength);
@@ -183,6 +195,7 @@ export default function LifeTracker() {
   });
 
   const [currentStep, setCurrentStep] = useState(0); // 0..5 = questions, 6 = summary
+  const [prevStep, setPrevStep] = useState(0);
   const [slideDirection, setSlideDirection] = useState('next'); // 'next' or 'prev'
   const [showOptions, setShowOptions] = useState(false); // Controls option buttons appearance
   const [checking, setChecking] = useState(true);
@@ -190,6 +203,12 @@ export default function LifeTracker() {
   const [todayLog, setTodayLog] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState('');
+
+  // Synchronously reset showOptions on step change prior to render/paint
+  if (currentStep !== prevStep) {
+    setPrevStep(currentStep);
+    setShowOptions(false);
+  }
 
   // ─── Touch / Drag Swipe Gesture State ─────────────────────────────────────
   const [touchStart, setTouchStart] = useState(null);
@@ -218,11 +237,6 @@ export default function LifeTracker() {
     };
     checkTodayLog();
   }, []);
-
-  // Reset showOptions when step changes
-  useEffect(() => {
-    setShowOptions(false);
-  }, [currentStep]);
 
   const goNext = () => {
     if (currentStep < 6) {
@@ -597,36 +611,39 @@ function playFaintChime() {
                   </div>
                 </div>
 
-                <div
-                  className={`question-options-row ${showOptions ? 'options-fade-in' : ''}`}
-                  style={{
-                    marginTop: 20,
-                    opacity: showOptions ? 1 : 0,
-                    pointerEvents: showOptions ? 'auto' : 'none',
-                    transition: 'opacity 0.3s ease',
-                  }}
-                >
-                  {currentQ.options.map((opt, optIdx) => {
-                    const isSelected = answers[currentQ.key] === opt.value;
-                    return (
-                      <button
-                        key={String(opt.value)}
-                        type="button"
-                        className={`life-opt-btn ${isSelected ? 'active' : ''}`}
-                        onClick={() => {
-                          setShowOptions(true);
-                          handleSelectOption(currentQ.key, opt.value, currentStep);
-                        }}
-                        style={{
-                          padding: '14px 16px',
-                          '--opt-idx': optIdx,
-                        }}
-                      >
-                        <span className="opt-label">{opt.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+                {(() => {
+                  const optionsVisible = showOptions;
+                  return (
+                    <div
+                      className={`question-options-row ${optionsVisible ? 'options-fade-in' : ''}`}
+                      style={{
+                        marginTop: 20,
+                        pointerEvents: optionsVisible ? 'auto' : 'none',
+                      }}
+                    >
+                      {currentQ.options.map((opt, optIdx) => {
+                        const isSelected = answers[currentQ.key] === opt.value;
+                        return (
+                          <button
+                            key={String(opt.value)}
+                            type="button"
+                            className={`life-opt-btn ${isSelected ? 'active' : ''}`}
+                            onClick={() => {
+                              setShowOptions(true);
+                              handleSelectOption(currentQ.key, opt.value, currentStep);
+                            }}
+                            style={{
+                              padding: '14px 16px',
+                              '--opt-idx': optIdx,
+                            }}
+                          >
+                            <span className="opt-label">{opt.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
               </div>
             )}
 
