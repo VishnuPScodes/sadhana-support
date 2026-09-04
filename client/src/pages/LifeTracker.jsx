@@ -606,7 +606,7 @@ function playFaintChime() {
                     transition: 'opacity 0.3s ease',
                   }}
                 >
-                  {currentQ.options.map((opt) => {
+                  {currentQ.options.map((opt, optIdx) => {
                     const isSelected = answers[currentQ.key] === opt.value;
                     return (
                       <button
@@ -617,7 +617,10 @@ function playFaintChime() {
                           setShowOptions(true);
                           handleSelectOption(currentQ.key, opt.value, currentStep);
                         }}
-                        style={{ padding: '14px 16px' }}
+                        style={{
+                          padding: '14px 16px',
+                          '--opt-idx': optIdx,
+                        }}
                       >
                         <span className="opt-label">{opt.label}</span>
                       </button>

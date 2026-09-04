@@ -1832,19 +1832,33 @@ h1.page-title {
 }
 
 .options-fade-in {
-  animation: optionsFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: optionsFadeIn 0.3s ease forwards;
 }
 
 @keyframes optionsFadeIn {
-  from {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.options-fade-in .life-opt-btn {
+  opacity: 0;
+  transform: translateY(18px) scale(0.92);
+  animation: optStaggerReveal 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--opt-idx, 0) * 80ms + 40ms);
+  will-change: opacity, transform;
+}
+
+@keyframes optStaggerReveal {
+  0% {
     opacity: 0;
-    transform: translateY(14px) scale(0.97);
+    transform: translateY(18px) scale(0.92);
   }
-  to {
+  100% {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
+
 
 
 
