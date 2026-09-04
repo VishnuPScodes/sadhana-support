@@ -78,7 +78,7 @@ const QUESTIONS = [
 ];
 
 // ─── Character-by-Character Handwriting Typewriter Component ──────────────────
-function HandwritingText({ text, speed = 35, onComplete }) {
+function HandwritingText({ text, speed = 65, onComplete }) {
   const [displayedLength, setDisplayedLength] = useState(0);
 
   useEffect(() => {
@@ -487,7 +487,7 @@ export default function LifeTracker() {
                     <HandwritingText
                       key={`hw-${currentStep}`}
                       text={currentQ.question}
-                      speed={35}
+                      speed={65}
                       onComplete={() => setShowOptions(true)}
                     />
                   </div>
