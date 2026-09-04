@@ -1842,22 +1842,26 @@ h1.page-title {
 
 .options-fade-in .life-opt-btn {
   opacity: 0;
-  transform: translateY(18px) scale(0.92);
-  animation: optStaggerReveal 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: calc(var(--opt-idx, 0) * 80ms + 40ms);
-  will-change: opacity, transform;
+  transform: translateY(20px) scale(0.93);
+  filter: blur(4px);
+  animation: optStaggerReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--opt-idx, 0) * 280ms + 120ms);
+  will-change: opacity, transform, filter;
 }
 
 @keyframes optStaggerReveal {
   0% {
     opacity: 0;
-    transform: translateY(18px) scale(0.92);
+    transform: translateY(20px) scale(0.93);
+    filter: blur(4px);
   }
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }
+
 
 
 
