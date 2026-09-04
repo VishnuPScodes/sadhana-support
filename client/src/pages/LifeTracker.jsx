@@ -77,6 +77,59 @@ const QUESTIONS = [
   },
 ];
 
+// ─── Unique Subtle Cosmic Glassmorphic Card Gradient Themes ──────────────────
+const CARD_THEMES = [
+  {
+    // Question 1: Deep Cosmic Indigo Violet
+    bg: 'linear-gradient(135deg, rgba(32, 18, 62, 0.85), rgba(15, 10, 32, 0.92))',
+    border: 'rgba(139, 92, 246, 0.4)',
+    glow: 'rgba(139, 92, 246, 0.2)',
+    tagColor: '#c4b5fd',
+  },
+  {
+    // Question 2: Muted Emerald Sage
+    bg: 'linear-gradient(135deg, rgba(12, 48, 38, 0.85), rgba(10, 26, 24, 0.92))',
+    border: 'rgba(52, 211, 153, 0.4)',
+    glow: 'rgba(52, 211, 153, 0.2)',
+    tagColor: '#6ee7b7',
+  },
+  {
+    // Question 3: Ocean Sapphire Teal
+    bg: 'linear-gradient(135deg, rgba(14, 38, 68, 0.85), rgba(10, 22, 44, 0.92))',
+    border: 'rgba(56, 189, 248, 0.4)',
+    glow: 'rgba(56, 189, 248, 0.2)',
+    tagColor: '#7dd3fc',
+  },
+  {
+    // Question 4: Warm Golden Amber
+    bg: 'linear-gradient(135deg, rgba(50, 34, 12, 0.85), rgba(28, 18, 12, 0.92))',
+    border: 'rgba(251, 191, 36, 0.4)',
+    glow: 'rgba(251, 191, 36, 0.2)',
+    tagColor: '#fde047',
+  },
+  {
+    // Question 5: Electric Orchid Amethyst
+    bg: 'linear-gradient(135deg, rgba(46, 16, 56, 0.85), rgba(22, 10, 36, 0.92))',
+    border: 'rgba(192, 132, 252, 0.4)',
+    glow: 'rgba(192, 132, 252, 0.2)',
+    tagColor: '#e9d5ff',
+  },
+  {
+    // Question 6: Royal Amethyst Purple
+    bg: 'linear-gradient(135deg, rgba(26, 24, 64, 0.85), rgba(14, 12, 40, 0.92))',
+    border: 'rgba(167, 139, 250, 0.4)',
+    glow: 'rgba(167, 139, 250, 0.2)',
+    tagColor: '#ddd6fe',
+  },
+  {
+    // Final Step 6: Celestial Gold Emerald
+    bg: 'linear-gradient(135deg, rgba(22, 40, 34, 0.9), rgba(38, 30, 14, 0.9))',
+    border: 'rgba(52, 211, 153, 0.45)',
+    glow: 'rgba(52, 211, 153, 0.25)',
+    tagColor: '#a7f3d0',
+  },
+];
+
 // ─── Character-by-Character Handwriting Typewriter Component ──────────────────
 function HandwritingText({ text, speed = 65, onComplete }) {
   const [displayedLength, setDisplayedLength] = useState(0);
@@ -376,6 +429,7 @@ export default function LifeTracker() {
   }
 
   const currentQ = currentStep < 6 ? QUESTIONS[currentStep] : null;
+  const currentTheme = CARD_THEMES[currentStep] || CARD_THEMES[0];
   const progressPct = Math.round((Math.min(currentStep, 6) / 6) * 100);
 
   return (
@@ -397,7 +451,7 @@ export default function LifeTracker() {
             {/* Step Progress Bar */}
             <div className="wizard-progress-header">
               <div className="wizard-step-info">
-                <span className="wizard-step-badge">
+                <span className="wizard-step-badge" style={{ color: currentTheme.tagColor }}>
                   {currentStep < 6 ? `Question ${currentStep + 1} of 6` : 'Ready to Submit ✨'}
                 </span>
                 <span style={{ fontSize: 12 }}>
@@ -405,7 +459,13 @@ export default function LifeTracker() {
                 </span>
               </div>
               <div className="wizard-bar-track">
-                <div className="wizard-bar-fill" style={{ width: `${progressPct}%` }} />
+                <div
+                  className="wizard-bar-fill"
+                  style={{
+                    width: `${progressPct}%`,
+                    background: `linear-gradient(90deg, ${currentTheme.tagColor}, var(--purple-500))`,
+                  }}
+                />
               </div>
 
               {/* Step indicator dots */}
@@ -420,6 +480,7 @@ export default function LifeTracker() {
                       className={`wizard-step-dot ${isActive ? 'active' : isDone ? 'completed' : ''}`}
                       onClick={() => goToStep(idx)}
                       title={`Go to Question ${idx + 1}`}
+                      style={isActive ? { background: currentTheme.tagColor, color: '#000', borderColor: currentTheme.tagColor } : {}}
                     >
                       {isDone ? '✓' : idx + 1}
                     </button>
@@ -430,13 +491,14 @@ export default function LifeTracker() {
                   className={`wizard-step-dot ${currentStep === 6 ? 'active' : ''}`}
                   onClick={() => goToStep(6)}
                   title="Final Review & Submit"
+                  style={currentStep === 6 ? { background: currentTheme.tagColor, color: '#000', borderColor: currentTheme.tagColor } : {}}
                 >
                   ✨
                 </button>
               </div>
             </div>
 
-            {/* ─── HANDWRITING SINGLE QUESTION CARD (Steps 0..5) ─────────────────── */}
+            {/* ─── HANDWRITING SINGLE QUESTION CARD WITH UNIQUE GRADIENT SHADE ─────────────────── */}
             {currentStep < 6 && currentQ && (
               <div
                 key={`step-${currentStep}`}
@@ -444,8 +506,11 @@ export default function LifeTracker() {
                 style={{
                   margin: 0,
                   position: 'relative',
+                  background: currentTheme.bg,
+                  borderColor: currentTheme.border,
+                  boxShadow: `0 8px 32px ${currentTheme.glow}`,
                   transform: isDragging ? `translateX(${touchDeltaX}px) rotate(${touchDeltaX * 0.04}deg)` : undefined,
-                  transition: isDragging ? 'none' : 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
+                  transition: isDragging ? 'none' : 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease',
                   opacity: isDragging ? Math.max(0.4, 1 - Math.abs(touchDeltaX) / 300) : 1,
                   cursor: isDragging ? 'grabbing' : 'grab',
                   touchAction: 'pan-y',
@@ -483,7 +548,9 @@ export default function LifeTracker() {
                 <div className="question-header">
                   <span className="question-icon" style={{ fontSize: 36 }}>{currentQ.icon}</span>
                   <div className="question-text-box">
-                    <span className="question-tag">Question {currentQ.num} · {currentQ.title}</span>
+                    <span className="question-tag" style={{ color: currentTheme.tagColor }}>
+                      Question {currentQ.num} · {currentQ.title}
+                    </span>
                     <HandwritingText
                       key={`hw-${currentStep}`}
                       text={currentQ.question}
@@ -530,8 +597,11 @@ export default function LifeTracker() {
                 style={{
                   margin: 0,
                   textAlign: 'left',
+                  background: currentTheme.bg,
+                  borderColor: currentTheme.border,
+                  boxShadow: `0 8px 32px ${currentTheme.glow}`,
                   transform: isDragging ? `translateX(${touchDeltaX}px) rotate(${touchDeltaX * 0.04}deg)` : undefined,
-                  transition: isDragging ? 'none' : 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transition: isDragging ? 'none' : 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease',
                   cursor: isDragging ? 'grabbing' : 'grab',
                   touchAction: 'pan-y',
                   userSelect: 'none',
@@ -544,7 +614,7 @@ export default function LifeTracker() {
                 onMouseUp={handleTouchEnd}
                 onMouseLeave={handleTouchEnd}
               >
-                <h3 style={{ fontSize: 18, fontWeight: 600, color: 'var(--purple-400)', marginBottom: 6 }}>
+                <h3 style={{ fontSize: 18, fontWeight: 600, color: currentTheme.tagColor, marginBottom: 6 }}>
                   Review Your Daily Journal
                 </h3>
                 <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>
