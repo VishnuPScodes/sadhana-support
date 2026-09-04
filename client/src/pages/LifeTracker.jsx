@@ -244,7 +244,44 @@ export default function LifeTracker() {
     setCurrentStep(step);
   };
 
+// ─── Faint Soothing Audio Chime Feedback (Web Audio API) ────────────────────
+function playFaintChime() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    // Soothing sine wave tone (528 Hz Solfeggio frequency with subtle pitch lift)
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(528, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.14);
+
+    // Warm lowpass filter to prevent high frequency harshness
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1200, now);
+
+    // Very faint volume envelope (0.05 max gain)
+    gain.gain.setValueAtTime(0.05, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.33);
+  } catch (e) {
+    // Fail silently if browser audio policies apply
+  }
+}
+
   const handleSelectOption = (key, value, stepIdx) => {
+    playFaintChime();
     setAnswers(prev => ({ ...prev, [key]: value }));
     setError('');
 
