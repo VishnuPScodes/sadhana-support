@@ -77,6 +77,45 @@ const QUESTIONS = [
   },
 ];
 
+// ─── Character-by-Character Handwriting Typewriter Component ──────────────────
+function HandwritingText({ text, speed = 35, onComplete }) {
+  const [displayedLength, setDisplayedLength] = useState(0);
+
+  useEffect(() => {
+    setDisplayedLength(0);
+    let index = 0;
+
+    const timer = setInterval(() => {
+      index++;
+      setDisplayedLength(index);
+      if (index >= text.length) {
+        clearInterval(timer);
+        if (onComplete) onComplete();
+      }
+    }, speed);
+
+    return () => clearInterval(timer);
+  }, [text, speed]);
+
+  const visibleText = text.slice(0, displayedLength);
+  const isWriting = displayedLength < text.length;
+
+  return (
+    <h3
+      className="question-title"
+      style={{ fontSize: 'clamp(15px, 4vw, 18px)', minHeight: 44, cursor: 'pointer' }}
+      onClick={() => {
+        setDisplayedLength(text.length);
+        if (onComplete) onComplete();
+      }}
+      title="Tap to finish writing instantly"
+    >
+      <span className="handwriting-text">{visibleText}</span>
+      {isWriting && <span className="writing-cursor">|</span>}
+    </h3>
+  );
+}
+
 export default function LifeTracker() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -92,6 +131,7 @@ export default function LifeTracker() {
 
   const [currentStep, setCurrentStep] = useState(0); // 0..5 = questions, 6 = summary
   const [slideDirection, setSlideDirection] = useState('next'); // 'next' or 'prev'
+  const [showOptions, setShowOptions] = useState(false); // Controls option buttons appearance
   const [checking, setChecking] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [todayLog, setTodayLog] = useState(null);
@@ -125,6 +165,11 @@ export default function LifeTracker() {
     };
     checkTodayLog();
   }, []);
+
+  // Reset showOptions when step changes
+  useEffect(() => {
+    setShowOptions(false);
+  }, [currentStep]);
 
   const goNext = () => {
     if (currentStep < 6) {
@@ -163,7 +208,6 @@ export default function LifeTracker() {
 
   // ─── Swipe Gesture Handlers ────────────────────────────────────────────────
   const handleTouchStart = (e) => {
-    // Only capture if target is not a button click
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     setTouchStart(clientX);
     setTouchDeltaX(0);
@@ -392,7 +436,7 @@ export default function LifeTracker() {
               </div>
             </div>
 
-            {/* ─── TINDER-STYLE SINGLE QUESTION CARD (Steps 0..5) ─────────────────── */}
+            {/* ─── HANDWRITING SINGLE QUESTION CARD (Steps 0..5) ─────────────────── */}
             {currentStep < 6 && currentQ && (
               <div
                 key={`step-${currentStep}`}
@@ -440,35 +484,36 @@ export default function LifeTracker() {
                   <span className="question-icon" style={{ fontSize: 36 }}>{currentQ.icon}</span>
                   <div className="question-text-box">
                     <span className="question-tag">Question {currentQ.num} · {currentQ.title}</span>
-                    <h3 className="question-title" style={{ fontSize: 'clamp(15px, 4vw, 18px)' }}>
-                      {currentQ.question.split(' ').map((word, wIdx) => (
-                        <span
-                          key={`${word}-${wIdx}-${currentStep}`}
-                          className="animated-word"
-                          style={{ '--word-idx': wIdx }}
-                        >
-                          {word}{' '}
-                        </span>
-                      ))}
-                    </h3>
+                    <HandwritingText
+                      key={`hw-${currentStep}`}
+                      text={currentQ.question}
+                      speed={35}
+                      onComplete={() => setShowOptions(true)}
+                    />
                   </div>
                 </div>
 
-                <div className="question-options-row" style={{ marginTop: 20 }}>
-                  {currentQ.options.map((opt, optIdx) => {
+                <div
+                  className={`question-options-row ${showOptions ? 'options-fade-in' : ''}`}
+                  style={{
+                    marginTop: 20,
+                    opacity: showOptions ? 1 : 0,
+                    pointerEvents: showOptions ? 'auto' : 'none',
+                    transition: 'opacity 0.3s ease',
+                  }}
+                >
+                  {currentQ.options.map((opt) => {
                     const isSelected = answers[currentQ.key] === opt.value;
-                    const wordsCount = currentQ.question.split(' ').length;
-                    const optDelayMs = wordsCount * 160 + optIdx * 80 + 150;
                     return (
                       <button
                         key={String(opt.value)}
                         type="button"
                         className={`life-opt-btn ${isSelected ? 'active' : ''}`}
-                        onClick={() => handleSelectOption(currentQ.key, opt.value, currentStep)}
-                        style={{
-                          padding: '14px 16px',
-                          animationDelay: `${optDelayMs}ms`,
+                        onClick={() => {
+                          setShowOptions(true);
+                          handleSelectOption(currentQ.key, opt.value, currentStep);
                         }}
+                        style={{ padding: '14px 16px' }}
                       >
                         <span className="opt-label">{opt.label}</span>
                       </button>
