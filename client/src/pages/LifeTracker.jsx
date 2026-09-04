@@ -460,31 +460,6 @@ export default function LifeTracker() {
                     );
                   })}
                 </div>
-
-                {/* Card Navigation Footer */}
-                <div style={{ marginTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  {currentStep > 0 ? (
-                    <button
-                      type="button"
-                      className="btn btn-outline"
-                      onClick={goPrev}
-                      style={{ padding: '8px 16px', fontSize: 13 }}
-                    >
-                      ← Previous
-                    </button>
-                  ) : <div />}
-
-                  {answers[currentQ.key] !== null && (
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={goNext}
-                      style={{ padding: '8px 20px', fontSize: 13, width: 'auto' }}
-                    >
-                      {currentStep === 5 ? 'Review & Submit →' : 'Next Question →'}
-                    </button>
-                  )}
-                </div>
               </div>
             )}
 
