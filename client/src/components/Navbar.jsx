@@ -22,11 +22,13 @@ export default function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
-  // Extensible list of navigation items for future additions
+  // Extensible list of navigation items
   const navItems = [
     { path: '/tracker', label: 'Today', icon: '🧘', id: 'nav-tracker' },
+    { path: '/life-tracker', label: 'Life Journal', icon: '🌱', id: 'nav-life-tracker' },
+    { path: '/life-metrics', label: 'Life Metrics', icon: '📊', id: 'nav-life-metrics' },
     { path: '/select-practices', label: 'Practices', icon: '⚙️', id: 'nav-select-practices' },
-    { path: '/progress', label: 'Progress', icon: '📈', id: 'nav-progress' },
+    { path: '/progress', label: 'Sadhana Progress', icon: '📈', id: 'nav-progress' },
   ];
 
   return (

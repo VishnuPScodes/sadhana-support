@@ -10,6 +10,8 @@ import SelectPractices from './pages/SelectPractices';
 import Tracker from './pages/Tracker';
 import Congrats from './pages/Congrats';
 import Progress from './pages/Progress';
+import LifeTracker from './pages/LifeTracker';
+import LifeMetrics from './pages/LifeMetrics';
 
 // Smart redirect from / based on auth state
 function RootRedirect() {
@@ -39,6 +41,22 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Tracker />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/life-tracker"
+        element={
+          <ProtectedRoute>
+            <LifeTracker />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/life-metrics"
+        element={
+          <ProtectedRoute>
+            <LifeMetrics />
           </ProtectedRoute>
         }
       />

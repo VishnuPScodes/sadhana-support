@@ -11,6 +11,7 @@ const path = require('path');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const sadhanaRoutes = require('./routes/sadhana');
+const lifeRoutes = require('./routes/life');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/sadhana', sadhanaRoutes);
+app.use('/api/life', lifeRoutes);
 
 // ─── Health check ─────────────────────────────────────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'OK', timestamp: new Date() }));
