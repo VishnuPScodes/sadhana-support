@@ -458,7 +458,7 @@ export default function LifeTracker() {
                   {currentQ.options.map((opt, optIdx) => {
                     const isSelected = answers[currentQ.key] === opt.value;
                     const wordsCount = currentQ.question.split(' ').length;
-                    const optDelayMs = wordsCount * 80 + optIdx * 70 + 120;
+                    const optDelayMs = wordsCount * 160 + optIdx * 80 + 150;
                     return (
                       <button
                         key={String(opt.value)}
