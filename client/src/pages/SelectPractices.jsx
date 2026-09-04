@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Navbar from '../components/Navbar';
 import api from '../api';
 
 const ALL_PRACTICES = [
@@ -60,9 +61,11 @@ export default function SelectPractices() {
   const isEditing = Boolean(user?.practicesSelected);
 
   return (
-    <div className="page" style={{ paddingTop: isEditing ? 90 : 20 }}>
-      <div className="container-lg animate-in" style={{ padding: '24px 16px' }}>
-        <div className="glass-card">
+    <>
+      {user && <Navbar />}
+      <div className="page" style={{ paddingTop: user ? 96 : 32 }}>
+        <div className="container-lg animate-in" style={{ padding: '0 8px' }}>
+          <div className="glass-card">
           <div className="brand">
             <div className="brand-icon">🧘</div>
             <h1 className="brand-title">
@@ -150,5 +153,6 @@ export default function SelectPractices() {
         </div>
       </div>
     </div>
+    </>
   );
 }

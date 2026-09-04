@@ -180,12 +180,12 @@ h1.page-title {
 
 /* ─── Form Elements ─────────────────────────────────────────────────────── */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: clamp(14px, 3vw, 20px);
 }
 
 .form-label {
   display: block;
-  font-size: 13px;
+  font-size: clamp(11px, 2vw, 13px);
   font-weight: 500;
   color: var(--text-secondary);
   margin-bottom: 8px;
@@ -195,13 +195,13 @@ h1.page-title {
 
 .form-input {
   width: 100%;
-  padding: 14px 18px;
+  padding: clamp(12px, 2.5vw, 14px) clamp(14px, 3vw, 18px);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-family: 'Geist', sans-serif;
-  font-size: 15px;
+  font-size: clamp(14px, 1.2vw + 12px, 15px);
   outline: none;
   transition: var(--transition);
 }
@@ -222,10 +222,10 @@ h1.page-title {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 28px;
+  padding: clamp(12px, 2.5vw, 14px) clamp(18px, 4vw, 28px);
   border-radius: var(--radius-sm);
   font-family: 'Geist', sans-serif;
-  font-size: 15px;
+  font-size: clamp(14px, 1.2vw + 12px, 15px);
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
@@ -272,7 +272,7 @@ h1.page-title {
 .alert {
   padding: 12px 16px;
   border-radius: var(--radius-sm);
-  font-size: 14px;
+  font-size: clamp(13px, 2.2vw, 14px);
   margin-bottom: 20px;
   display: flex;
   align-items: center;
@@ -295,7 +295,7 @@ h1.page-title {
 .link-row {
   text-align: center;
   margin-top: 24px;
-  font-size: 14px;
+  font-size: clamp(13px, 2.2vw, 14px);
   color: var(--text-muted);
 }
 
@@ -322,7 +322,7 @@ h1.page-title {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px 20px;
+  padding: clamp(12px, 3vw, 16px) clamp(14px, 3.5vw, 20px);
   background: rgba(255, 255, 255, 0.03);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
@@ -372,7 +372,7 @@ h1.page-title {
 }
 
 .practice-option-name {
-  font-size: 15px;
+  font-size: clamp(13px, 2.5vw, 15px);
   font-weight: 500;
   color: var(--text-primary);
   z-index: 1;
@@ -380,14 +380,14 @@ h1.page-title {
 
 .practice-option-icon {
   margin-left: auto;
-  font-size: 20px;
+  font-size: clamp(18px, 4vw, 22px);
   z-index: 1;
 }
 
 /* ─── Tracker Cards ─────────────────────────────────────────────────────── */
 .tracker-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 .date-badge {
@@ -398,7 +398,7 @@ h1.page-title {
   background: rgba(139, 92, 246, 0.1);
   border: 1px solid rgba(139, 92, 246, 0.2);
   border-radius: 100px;
-  font-size: 13px;
+  font-size: clamp(11px, 2.2vw, 13px);
   color: var(--purple-400);
   margin-bottom: 16px;
 }
@@ -413,8 +413,8 @@ h1.page-title {
 .tracker-card {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 20px 24px;
+  gap: clamp(10px, 3vw, 16px);
+  padding: clamp(14px, 3.5vw, 20px) clamp(14px, 4vw, 24px);
   background: rgba(255, 255, 255, 0.04);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);

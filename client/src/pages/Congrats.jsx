@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useMemo } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Navbar from '../components/Navbar';
 
 const PRACTICE_ICONS = {
   'Shoonya Meditation':   '🌌',
@@ -117,8 +118,10 @@ export default function Congrats() {
   const donePractices = practices.filter(p => p.count > 0);
 
   return (
-    <div className="page" style={{ minHeight: '100vh', alignItems: 'center' }}>
-      <canvas ref={canvasRef} className="congrats-canvas" />
+    <>
+      <Navbar />
+      <div className="page" style={{ minHeight: '100vh', alignItems: 'center', paddingTop: 96 }}>
+        <canvas ref={canvasRef} className="congrats-canvas" />
 
       <div className="container-lg animate-in">
         <div className="glass-card congrats-content">
@@ -226,5 +229,6 @@ export default function Congrats() {
         </div>
       </div>
     </div>
+    </>
   );
 }
