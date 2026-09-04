@@ -119,9 +119,52 @@ export default function LifeTracker() {
     checkTodayLog();
   }, []);
 
-  const handleSelectOption = (key, value) => {
+  // ─── Scroll Reveal Intersection Observer ───────────────────────────────────
+  useEffect(() => {
+    if (checking) return;
+
+    // Small delay to ensure DOM nodes are mounted
+    const timer = setTimeout(() => {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -30px 0px',
+        threshold: 0.08,
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      const revealElements = document.querySelectorAll('.reveal-card, .reveal-submit-box');
+      revealElements.forEach((el) => observer.observe(el));
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [checking, todayLog, isEditing]);
+
+  const handleSelectOption = (key, value, cardIdx) => {
     setAnswers(prev => ({ ...prev, [key]: value }));
     setError('');
+
+    // Smooth auto-scroll to the next question card or submit button after a brief delay
+    setTimeout(() => {
+      if (cardIdx < QUESTIONS.length - 1) {
+        const nextCard = document.getElementById(`life-question-card-${cardIdx + 1}`);
+        if (nextCard) {
+          nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        const submitBox = document.getElementById('submit-life-journal-container');
+        if (submitBox) {
+          submitBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }, 320);
   };
 
   const handleSubmit = async () => {
@@ -275,8 +318,13 @@ export default function LifeTracker() {
 
             {/* Questions List */}
             <div className="life-questions-grid">
-              {QUESTIONS.map((q) => (
-                <div key={q.key} className="life-question-card">
+              {QUESTIONS.map((q, cardIdx) => (
+                <div
+                  key={q.key}
+                  id={`life-question-card-${cardIdx}`}
+                  className="life-question-card reveal-card"
+                  style={{ '--card-idx': cardIdx }}
+                >
                   <div className="question-header">
                     <span className="question-icon">{q.icon}</span>
                     <div className="question-text-box">
@@ -286,14 +334,15 @@ export default function LifeTracker() {
                   </div>
 
                   <div className="question-options-row">
-                    {q.options.map((opt) => {
+                    {q.options.map((opt, optIdx) => {
                       const isSelected = answers[q.key] === opt.value;
                       return (
                         <button
                           key={String(opt.value)}
                           type="button"
                           className={`life-opt-btn ${isSelected ? 'active' : ''}`}
-                          onClick={() => handleSelectOption(q.key, opt.value)}
+                          style={{ '--opt-idx': optIdx }}
+                          onClick={() => handleSelectOption(q.key, opt.value, cardIdx)}
                         >
                           <span className="opt-label">{opt.label}</span>
                         </button>
@@ -310,7 +359,11 @@ export default function LifeTracker() {
               </div>
             )}
 
-            <div style={{ marginTop: 28, display: 'flex', gap: 12 }}>
+            <div
+              id="submit-life-journal-container"
+              className="reveal-submit-box"
+              style={{ marginTop: 28, display: 'flex', gap: 12 }}
+            >
               {isEditing && (
                 <button
                   type="button"
@@ -338,4 +391,6 @@ export default function LifeTracker() {
     </>
   );
 }
+
+
 
