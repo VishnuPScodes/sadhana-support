@@ -90,12 +90,18 @@ export default function LifeTracker() {
     vakshudhiRating: null,
   });
 
-  const [currentStep, setCurrentStep] = useState(0); // 0..5 = questions, 6 = summary & submit
+  const [currentStep, setCurrentStep] = useState(0); // 0..5 = questions, 6 = summary
+  const [slideDirection, setSlideDirection] = useState('next'); // 'next' or 'prev'
   const [checking, setChecking] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [todayLog, setTodayLog] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState('');
+
+  // ─── Touch / Drag Swipe Gesture State ─────────────────────────────────────
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchDeltaX, setTouchDeltaX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   const today = new Date().toLocaleDateString('en-IN', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
@@ -120,18 +126,72 @@ export default function LifeTracker() {
     checkTodayLog();
   }, []);
 
+  const goNext = () => {
+    if (currentStep < 6) {
+      setSlideDirection('next');
+      setCurrentStep(prev => prev + 1);
+    }
+  };
+
+  const goPrev = () => {
+    if (currentStep > 0) {
+      setSlideDirection('prev');
+      setCurrentStep(prev => prev - 1);
+    }
+  };
+
+  const goToStep = (step) => {
+    if (step > currentStep) setSlideDirection('next');
+    else if (step < currentStep) setSlideDirection('prev');
+    setCurrentStep(step);
+  };
+
   const handleSelectOption = (key, value, stepIdx) => {
     setAnswers(prev => ({ ...prev, [key]: value }));
     setError('');
 
-    // Advance to next card smoothly after 200ms
+    // Advance to next card from right to center after 200ms
     setTimeout(() => {
+      setSlideDirection('next');
       if (stepIdx < QUESTIONS.length - 1) {
         setCurrentStep(stepIdx + 1);
       } else {
-        setCurrentStep(6); // Final summary & submit step!
+        setCurrentStep(6);
       }
     }, 200);
+  };
+
+  // ─── Swipe Gesture Handlers ────────────────────────────────────────────────
+  const handleTouchStart = (e) => {
+    // Only capture if target is not a button click
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    setTouchStart(clientX);
+    setTouchDeltaX(0);
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e) => {
+    if (touchStart === null || !isDragging) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const delta = clientX - touchStart;
+    setTouchDeltaX(delta);
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+
+    const threshold = 60; // minimum px swipe to trigger slide
+    if (touchDeltaX < -threshold && currentStep < 6) {
+      // Swiped Left -> Go Next (card slides from right)
+      goNext();
+    } else if (touchDeltaX > threshold && currentStep > 0) {
+      // Swiped Right -> Go Prev (card slides from left)
+      goPrev();
+    }
+
+    setTouchStart(null);
+    setTouchDeltaX(0);
   };
 
   const handleSubmit = async () => {
@@ -250,7 +310,7 @@ export default function LifeTracker() {
                   className="btn btn-outline"
                   onClick={() => {
                     setIsEditing(true);
-                    setCurrentStep(0);
+                    goToStep(0);
                   }}
                   style={{ flex: 1 }}
                 >
@@ -279,10 +339,10 @@ export default function LifeTracker() {
       <Navbar />
       <div className="page" style={{ paddingTop: 96 }}>
         <div className="container-lg animate-in" style={{ maxWidth: 640 }}>
-          <div className="glass-card">
+          <div className="glass-card" style={{ overflow: 'hidden', position: 'relative' }}>
 
             {/* Tracker Header */}
-            <div className="tracker-header" style={{ marginBottom: 20 }}>
+            <div className="tracker-header" style={{ marginBottom: 16 }}>
               <div className="date-badge">🌱 {today}</div>
               <h1 className="page-title">Daily Life Journal</h1>
               <p className="page-desc">
@@ -296,7 +356,9 @@ export default function LifeTracker() {
                 <span className="wizard-step-badge">
                   {currentStep < 6 ? `Question ${currentStep + 1} of 6` : 'Ready to Submit ✨'}
                 </span>
-                <span>{progressPct}% Completed</span>
+                <span style={{ fontSize: 12 }}>
+                  👈 Swipe left / right 👉
+                </span>
               </div>
               <div className="wizard-bar-track">
                 <div className="wizard-bar-fill" style={{ width: `${progressPct}%` }} />
@@ -312,7 +374,7 @@ export default function LifeTracker() {
                       key={q.key}
                       type="button"
                       className={`wizard-step-dot ${isActive ? 'active' : isDone ? 'completed' : ''}`}
-                      onClick={() => setCurrentStep(idx)}
+                      onClick={() => goToStep(idx)}
                       title={`Go to Question ${idx + 1}`}
                     >
                       {isDone ? '✓' : idx + 1}
@@ -322,7 +384,7 @@ export default function LifeTracker() {
                 <button
                   type="button"
                   className={`wizard-step-dot ${currentStep === 6 ? 'active' : ''}`}
-                  onClick={() => setCurrentStep(6)}
+                  onClick={() => goToStep(6)}
                   title="Final Review & Submit"
                 >
                   ✨
@@ -330,9 +392,50 @@ export default function LifeTracker() {
               </div>
             </div>
 
-            {/* ─── SINGLE QUESTION CARD (Steps 0..5) ─────────────────── */}
+            {/* ─── TINDER-STYLE SINGLE QUESTION CARD (Steps 0..5) ─────────────────── */}
             {currentStep < 6 && currentQ && (
-              <div key={currentQ.key} className="life-question-card wizard-card-animate" style={{ margin: 0 }}>
+              <div
+                key={`step-${currentStep}`}
+                className={`life-question-card ${slideDirection === 'prev' ? 'slide-enter-prev' : 'slide-enter-next'}`}
+                style={{
+                  margin: 0,
+                  position: 'relative',
+                  transform: isDragging ? `translateX(${touchDeltaX}px) rotate(${touchDeltaX * 0.04}deg)` : undefined,
+                  transition: isDragging ? 'none' : 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
+                  opacity: isDragging ? Math.max(0.4, 1 - Math.abs(touchDeltaX) / 300) : 1,
+                  cursor: isDragging ? 'grabbing' : 'grab',
+                  touchAction: 'pan-y',
+                  userSelect: 'none',
+                }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onMouseDown={handleTouchStart}
+                onMouseMove={handleTouchMove}
+                onMouseUp={handleTouchEnd}
+                onMouseLeave={handleTouchEnd}
+              >
+                {/* Swipe Direction Hint Overlay */}
+                {isDragging && Math.abs(touchDeltaX) > 25 && (
+                  <div style={{
+                    position: 'absolute',
+                    top: 12,
+                    right: touchDeltaX < 0 ? 16 : 'auto',
+                    left: touchDeltaX > 0 ? 16 : 'auto',
+                    background: touchDeltaX < 0 ? 'rgba(139, 92, 246, 0.25)' : 'rgba(255, 255, 255, 0.15)',
+                    border: '1px solid var(--purple-400)',
+                    borderRadius: 100,
+                    padding: '4px 12px',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: 'white',
+                    pointerEvents: 'none',
+                    animation: 'fadeInUp 0.15s ease',
+                  }}>
+                    {touchDeltaX < 0 ? 'Next →' : '← Previous'}
+                  </div>
+                )}
+
                 <div className="question-header">
                   <span className="question-icon" style={{ fontSize: 36 }}>{currentQ.icon}</span>
                   <div className="question-text-box">
@@ -358,13 +461,13 @@ export default function LifeTracker() {
                   })}
                 </div>
 
-                {/* Card Navigation */}
+                {/* Card Navigation Footer */}
                 <div style={{ marginTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   {currentStep > 0 ? (
                     <button
                       type="button"
                       className="btn btn-outline"
-                      onClick={() => setCurrentStep(currentStep - 1)}
+                      onClick={goPrev}
                       style={{ padding: '8px 16px', fontSize: 13 }}
                     >
                       ← Previous
@@ -375,7 +478,7 @@ export default function LifeTracker() {
                     <button
                       type="button"
                       className="btn btn-primary"
-                      onClick={() => setCurrentStep(currentStep + 1)}
+                      onClick={goNext}
                       style={{ padding: '8px 20px', fontSize: 13, width: 'auto' }}
                     >
                       {currentStep === 5 ? 'Review & Submit →' : 'Next Question →'}
@@ -387,7 +490,25 @@ export default function LifeTracker() {
 
             {/* ─── FINAL REVIEW & SUBMIT CARD (Step 6) ─────────────────── */}
             {currentStep === 6 && (
-              <div className="wizard-card-animate" style={{ textAlign: 'left' }}>
+              <div
+                className={`life-question-card ${slideDirection === 'prev' ? 'slide-enter-prev' : 'slide-enter-next'}`}
+                style={{
+                  margin: 0,
+                  textAlign: 'left',
+                  transform: isDragging ? `translateX(${touchDeltaX}px) rotate(${touchDeltaX * 0.04}deg)` : undefined,
+                  transition: isDragging ? 'none' : 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                  cursor: isDragging ? 'grabbing' : 'grab',
+                  touchAction: 'pan-y',
+                  userSelect: 'none',
+                }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onMouseDown={handleTouchStart}
+                onMouseMove={handleTouchMove}
+                onMouseUp={handleTouchEnd}
+                onMouseLeave={handleTouchEnd}
+              >
                 <h3 style={{ fontSize: 18, fontWeight: 600, color: 'var(--purple-400)', marginBottom: 6 }}>
                   Review Your Daily Journal
                 </h3>
@@ -396,37 +517,37 @@ export default function LifeTracker() {
                 </p>
 
                 <div className="life-summary-list" style={{ marginBottom: 24 }}>
-                  <div className="summary-item" onClick={() => setCurrentStep(0)} style={{ cursor: 'pointer' }}>
+                  <div className="summary-item" onClick={() => goToStep(0)} style={{ cursor: 'pointer' }}>
                     <span>🧘‍♂️ Inner Engineering</span>
                     <span className="summary-item-count count-2">
                       {answers.innerEngineeringCount ? `${answers.innerEngineeringCount}× done` : 'Not selected'}
                     </span>
                   </div>
-                  <div className="summary-item" onClick={() => setCurrentStep(1)} style={{ cursor: 'pointer' }}>
+                  <div className="summary-item" onClick={() => goToStep(1)} style={{ cursor: 'pointer' }}>
                     <span>🍏 Conscious Eating</span>
                     <span className={`summary-item-count ${answers.consciousEating === 'Yes' ? 'count-2' : 'count-1'}`}>
                       {answers.consciousEating || 'Not selected'}
                     </span>
                   </div>
-                  <div className="summary-item" onClick={() => setCurrentStep(2)} style={{ cursor: 'pointer' }}>
+                  <div className="summary-item" onClick={() => goToStep(2)} style={{ cursor: 'pointer' }}>
                     <span>🌊 Reacting / Responding</span>
                     <span className={`summary-item-count ${answers.reactOrRespond === 'Responding' ? 'count-2' : 'count-1'}`}>
                       {answers.reactOrRespond || 'Not selected'}
                     </span>
                   </div>
-                  <div className="summary-item" onClick={() => setCurrentStep(3)} style={{ cursor: 'pointer' }}>
+                  <div className="summary-item" onClick={() => goToStep(3)} style={{ cursor: 'pointer' }}>
                     <span>🤝 Willingness</span>
                     <span className={`summary-item-count ${answers.moreWilling === 'Yes' ? 'count-2' : 'count-1'}`}>
                       {answers.moreWilling || 'Not selected'}
                     </span>
                   </div>
-                  <div className="summary-item" onClick={() => setCurrentStep(4)} style={{ cursor: 'pointer' }}>
+                  <div className="summary-item" onClick={() => goToStep(4)} style={{ cursor: 'pointer' }}>
                     <span>⚡ System Vibrancy</span>
                     <span className={`summary-item-count ${answers.systemVibrant === 'Yes' ? 'count-2' : 'count-1'}`}>
                       {answers.systemVibrant || 'Not selected'}
                     </span>
                   </div>
-                  <div className="summary-item" onClick={() => setCurrentStep(5)} style={{ cursor: 'pointer' }}>
+                  <div className="summary-item" onClick={() => goToStep(5)} style={{ cursor: 'pointer' }}>
                     <span>🗣️ Vakshudhi</span>
                     <span className={`summary-item-count ${answers.vakshudhiRating === 'Good' ? 'count-2' : 'count-1'}`}>
                       {answers.vakshudhiRating || 'Not selected'}
@@ -444,7 +565,7 @@ export default function LifeTracker() {
                   <button
                     type="button"
                     className="btn btn-outline"
-                    onClick={() => setCurrentStep(0)}
+                    onClick={() => goToStep(0)}
                     style={{ flex: 1 }}
                   >
                     ✏️ Edit Answers

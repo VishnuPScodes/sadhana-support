@@ -1749,6 +1749,38 @@ h1.page-title {
   }
 }
 
+/* ─── Tinder-style Directional Card Slide Animations ───────────────────── */
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(110px) rotate(5deg) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-110px) rotate(-5deg) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+.slide-enter-next {
+  animation: slideInFromRight 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.slide-enter-prev {
+  animation: slideInFromLeft 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+
 
 
 
