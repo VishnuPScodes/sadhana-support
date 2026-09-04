@@ -1665,6 +1665,91 @@ h1.page-title {
   transform: translateY(0);
 }
 
+/* ─── Single Card Life Journal Wizard ─────────────────────────────────────── */
+.wizard-progress-header {
+  margin-bottom: 24px;
+}
+
+.wizard-step-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.wizard-step-badge {
+  font-weight: 600;
+  color: var(--purple-400);
+}
+
+.wizard-bar-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.wizard-bar-fill {
+  height: 100%;
+  background: var(--gradient-button);
+  transition: width 0.4s ease;
+  border-radius: 100px;
+}
+
+.wizard-steps-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.wizard-step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.wizard-step-dot.active {
+  background: var(--purple-500);
+  border-color: var(--purple-400);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+}
+
+.wizard-step-dot.completed {
+  background: rgba(52, 211, 153, 0.2);
+  border-color: rgba(52, 211, 153, 0.5);
+  color: var(--emerald-400);
+}
+
+.wizard-card-animate {
+  animation: wizardCardSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes wizardCardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
 
 
 

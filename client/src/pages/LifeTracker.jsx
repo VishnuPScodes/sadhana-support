@@ -90,6 +90,7 @@ export default function LifeTracker() {
     vakshudhiRating: null,
   });
 
+  const [currentStep, setCurrentStep] = useState(0); // 0..5 = questions, 6 = summary & submit
   const [checking, setChecking] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [todayLog, setTodayLog] = useState(null);
@@ -119,58 +120,24 @@ export default function LifeTracker() {
     checkTodayLog();
   }, []);
 
-  // ─── Scroll Reveal Intersection Observer ───────────────────────────────────
-  useEffect(() => {
-    if (checking) return;
-
-    // Small delay to ensure DOM nodes are mounted
-    const timer = setTimeout(() => {
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px -30px 0px',
-        threshold: 0.08,
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      const revealElements = document.querySelectorAll('.reveal-card, .reveal-submit-box');
-      revealElements.forEach((el) => observer.observe(el));
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, [checking, todayLog, isEditing]);
-
-  const handleSelectOption = (key, value, cardIdx) => {
+  const handleSelectOption = (key, value, stepIdx) => {
     setAnswers(prev => ({ ...prev, [key]: value }));
     setError('');
 
-    // Smooth auto-scroll to the next question card or submit button after a brief delay
+    // Advance to next card smoothly after 200ms
     setTimeout(() => {
-      if (cardIdx < QUESTIONS.length - 1) {
-        const nextCard = document.getElementById(`life-question-card-${cardIdx + 1}`);
-        if (nextCard) {
-          nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+      if (stepIdx < QUESTIONS.length - 1) {
+        setCurrentStep(stepIdx + 1);
       } else {
-        const submitBox = document.getElementById('submit-life-journal-container');
-        if (submitBox) {
-          submitBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        setCurrentStep(6); // Final summary & submit step!
       }
-    }, 320);
+    }, 200);
   };
 
   const handleSubmit = async () => {
     const unanswered = QUESTIONS.some(q => answers[q.key] === null || answers[q.key] === undefined);
     if (unanswered) {
-      setError('Please select an answer for all questions before submitting.');
+      setError('Please answer all questions before submitting.');
       return;
     }
 
@@ -281,7 +248,10 @@ export default function LifeTracker() {
                 <button
                   type="button"
                   className="btn btn-outline"
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => {
+                    setIsEditing(true);
+                    setCurrentStep(0);
+                  }}
                   style={{ flex: 1 }}
                 >
                   ✏️ Edit Responses
@@ -301,14 +271,18 @@ export default function LifeTracker() {
     );
   }
 
+  const currentQ = currentStep < 6 ? QUESTIONS[currentStep] : null;
+  const progressPct = Math.round((Math.min(currentStep, 6) / 6) * 100);
+
   return (
     <>
       <Navbar />
       <div className="page" style={{ paddingTop: 96 }}>
-        <div className="container-lg animate-in">
+        <div className="container-lg animate-in" style={{ maxWidth: 640 }}>
           <div className="glass-card">
-            {/* Header */}
-            <div className="tracker-header">
+
+            {/* Tracker Header */}
+            <div className="tracker-header" style={{ marginBottom: 20 }}>
               <div className="date-badge">🌱 {today}</div>
               <h1 className="page-title">Daily Life Journal</h1>
               <p className="page-desc">
@@ -316,81 +290,182 @@ export default function LifeTracker() {
               </p>
             </div>
 
-            {/* Questions List */}
-            <div className="life-questions-grid">
-              {QUESTIONS.map((q, cardIdx) => (
-                <div
-                  key={q.key}
-                  id={`life-question-card-${cardIdx}`}
-                  className="life-question-card reveal-card"
-                  style={{ '--card-idx': cardIdx }}
-                >
-                  <div className="question-header">
-                    <span className="question-icon">{q.icon}</span>
-                    <div className="question-text-box">
-                      <span className="question-tag">Question {q.num} · {q.title}</span>
-                      <h3 className="question-title">{q.question}</h3>
-                    </div>
-                  </div>
+            {/* Step Progress Bar */}
+            <div className="wizard-progress-header">
+              <div className="wizard-step-info">
+                <span className="wizard-step-badge">
+                  {currentStep < 6 ? `Question ${currentStep + 1} of 6` : 'Ready to Submit ✨'}
+                </span>
+                <span>{progressPct}% Completed</span>
+              </div>
+              <div className="wizard-bar-track">
+                <div className="wizard-bar-fill" style={{ width: `${progressPct}%` }} />
+              </div>
 
-                  <div className="question-options-row">
-                    {q.options.map((opt, optIdx) => {
-                      const isSelected = answers[q.key] === opt.value;
-                      return (
-                        <button
-                          key={String(opt.value)}
-                          type="button"
-                          className={`life-opt-btn ${isSelected ? 'active' : ''}`}
-                          style={{ '--opt-idx': optIdx }}
-                          onClick={() => handleSelectOption(q.key, opt.value, cardIdx)}
-                        >
-                          <span className="opt-label">{opt.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
+              {/* Step indicator dots */}
+              <div className="wizard-steps-dots">
+                {QUESTIONS.map((q, idx) => {
+                  const isDone = answers[q.key] !== null;
+                  const isActive = currentStep === idx;
+                  return (
+                    <button
+                      key={q.key}
+                      type="button"
+                      className={`wizard-step-dot ${isActive ? 'active' : isDone ? 'completed' : ''}`}
+                      onClick={() => setCurrentStep(idx)}
+                      title={`Go to Question ${idx + 1}`}
+                    >
+                      {isDone ? '✓' : idx + 1}
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  className={`wizard-step-dot ${currentStep === 6 ? 'active' : ''}`}
+                  onClick={() => setCurrentStep(6)}
+                  title="Final Review & Submit"
+                >
+                  ✨
+                </button>
+              </div>
             </div>
 
-            {error && (
-              <div className="alert alert-error" style={{ marginTop: 20 }}>
-                ⚠️ {error}
+            {/* ─── SINGLE QUESTION CARD (Steps 0..5) ─────────────────── */}
+            {currentStep < 6 && currentQ && (
+              <div key={currentQ.key} className="life-question-card wizard-card-animate" style={{ margin: 0 }}>
+                <div className="question-header">
+                  <span className="question-icon" style={{ fontSize: 36 }}>{currentQ.icon}</span>
+                  <div className="question-text-box">
+                    <span className="question-tag">Question {currentQ.num} · {currentQ.title}</span>
+                    <h3 className="question-title" style={{ fontSize: 18 }}>{currentQ.question}</h3>
+                  </div>
+                </div>
+
+                <div className="question-options-row" style={{ marginTop: 20 }}>
+                  {currentQ.options.map((opt) => {
+                    const isSelected = answers[currentQ.key] === opt.value;
+                    return (
+                      <button
+                        key={String(opt.value)}
+                        type="button"
+                        className={`life-opt-btn ${isSelected ? 'active' : ''}`}
+                        onClick={() => handleSelectOption(currentQ.key, opt.value, currentStep)}
+                        style={{ padding: '14px 16px' }}
+                      >
+                        <span className="opt-label">{opt.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Card Navigation */}
+                <div style={{ marginTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  {currentStep > 0 ? (
+                    <button
+                      type="button"
+                      className="btn btn-outline"
+                      onClick={() => setCurrentStep(currentStep - 1)}
+                      style={{ padding: '8px 16px', fontSize: 13 }}
+                    >
+                      ← Previous
+                    </button>
+                  ) : <div />}
+
+                  {answers[currentQ.key] !== null && (
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => setCurrentStep(currentStep + 1)}
+                      style={{ padding: '8px 20px', fontSize: 13, width: 'auto' }}
+                    >
+                      {currentStep === 5 ? 'Review & Submit →' : 'Next Question →'}
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
-            <div
-              id="submit-life-journal-container"
-              className="reveal-submit-box"
-              style={{ marginTop: 28, display: 'flex', gap: 12 }}
-            >
-              {isEditing && (
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={() => setIsEditing(false)}
-                  style={{ flex: 1 }}
-                >
-                  Cancel
-                </button>
-              )}
-              <button
-                type="button"
-                id="submit-life-journal-btn"
-                className="btn btn-primary"
-                onClick={handleSubmit}
-                disabled={submitting}
-                style={{ flex: 2 }}
-              >
-                {submitting ? <span className="spinner" /> : "✨ Log Today's Life Journal"}
-              </button>
-            </div>
+            {/* ─── FINAL REVIEW & SUBMIT CARD (Step 6) ─────────────────── */}
+            {currentStep === 6 && (
+              <div className="wizard-card-animate" style={{ textAlign: 'left' }}>
+                <h3 style={{ fontSize: 18, fontWeight: 600, color: 'var(--purple-400)', marginBottom: 6 }}>
+                  Review Your Daily Journal
+                </h3>
+                <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>
+                  Double-check your conscious living reflections before saving for today.
+                </p>
+
+                <div className="life-summary-list" style={{ marginBottom: 24 }}>
+                  <div className="summary-item" onClick={() => setCurrentStep(0)} style={{ cursor: 'pointer' }}>
+                    <span>🧘‍♂️ Inner Engineering</span>
+                    <span className="summary-item-count count-2">
+                      {answers.innerEngineeringCount ? `${answers.innerEngineeringCount}× done` : 'Not selected'}
+                    </span>
+                  </div>
+                  <div className="summary-item" onClick={() => setCurrentStep(1)} style={{ cursor: 'pointer' }}>
+                    <span>🍏 Conscious Eating</span>
+                    <span className={`summary-item-count ${answers.consciousEating === 'Yes' ? 'count-2' : 'count-1'}`}>
+                      {answers.consciousEating || 'Not selected'}
+                    </span>
+                  </div>
+                  <div className="summary-item" onClick={() => setCurrentStep(2)} style={{ cursor: 'pointer' }}>
+                    <span>🌊 Reacting / Responding</span>
+                    <span className={`summary-item-count ${answers.reactOrRespond === 'Responding' ? 'count-2' : 'count-1'}`}>
+                      {answers.reactOrRespond || 'Not selected'}
+                    </span>
+                  </div>
+                  <div className="summary-item" onClick={() => setCurrentStep(3)} style={{ cursor: 'pointer' }}>
+                    <span>🤝 Willingness</span>
+                    <span className={`summary-item-count ${answers.moreWilling === 'Yes' ? 'count-2' : 'count-1'}`}>
+                      {answers.moreWilling || 'Not selected'}
+                    </span>
+                  </div>
+                  <div className="summary-item" onClick={() => setCurrentStep(4)} style={{ cursor: 'pointer' }}>
+                    <span>⚡ System Vibrancy</span>
+                    <span className={`summary-item-count ${answers.systemVibrant === 'Yes' ? 'count-2' : 'count-1'}`}>
+                      {answers.systemVibrant || 'Not selected'}
+                    </span>
+                  </div>
+                  <div className="summary-item" onClick={() => setCurrentStep(5)} style={{ cursor: 'pointer' }}>
+                    <span>🗣️ Vakshudhi</span>
+                    <span className={`summary-item-count ${answers.vakshudhiRating === 'Good' ? 'count-2' : 'count-1'}`}>
+                      {answers.vakshudhiRating || 'Not selected'}
+                    </span>
+                  </div>
+                </div>
+
+                {error && (
+                  <div className="alert alert-error" style={{ marginBottom: 20 }}>
+                    ⚠️ {error}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <button
+                    type="button"
+                    className="btn btn-outline"
+                    onClick={() => setCurrentStep(0)}
+                    style={{ flex: 1 }}
+                  >
+                    ✏️ Edit Answers
+                  </button>
+                  <button
+                    type="button"
+                    id="submit-life-journal-btn"
+                    className="btn btn-primary"
+                    onClick={handleSubmit}
+                    disabled={submitting}
+                    style={{ flex: 2 }}
+                  >
+                    {submitting ? <span className="spinner" /> : "✨ Log Today's Life Journal"}
+                  </button>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </div>
     </>
   );
 }
-
-
-
