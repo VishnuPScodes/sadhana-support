@@ -149,6 +149,29 @@ router.post('/guru-puja', auth, async (req, res) => {
   }
 });
 
+// POST /api/sadhana/reflection — save focus and awareness percentages
+router.post('/reflection', auth, async (req, res) => {
+  try {
+    const { focusPercentage, awarenessPercentage } = req.body;
+    const today = new Date().toISOString().split('T')[0];
+    
+    const update = {};
+    if (focusPercentage !== undefined) update.focusPercentage = focusPercentage;
+    if (awarenessPercentage !== undefined) update.awarenessPercentage = awarenessPercentage;
+
+    const log = await SadhanaLog.findOneAndUpdate(
+      { userId: req.user._id, date: today },
+      { $set: update },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+
+    res.json({ message: 'Reflection updated', log });
+  } catch (err) {
+    console.error('Reflection update error:', err);
+    res.status(500).json({ message: 'Server error updating reflection' });
+  }
+});
+
 // GET /api/sadhana/history — get up to 180 days of logs for progress graph
 router.get('/history', auth, async (req, res) => {
   try {

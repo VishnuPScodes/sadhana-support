@@ -7,6 +7,8 @@ import api from '../api';
 export default function Landing() {
   const [pradakshinaCount, setPradakshinaCount] = useState(0);
   const [guruPujaAttended, setGuruPujaAttended] = useState(false);
+  const [focusPercentage, setFocusPercentage] = useState(0);
+  const [awarenessPercentage, setAwarenessPercentage] = useState(0);
   const [loading, setLoading] = useState(true);
 
   // Long press animation & trigger tracking
@@ -32,6 +34,8 @@ export default function Landing() {
         }
         if (data.log) {
           setGuruPujaAttended(!!data.log.guruPujaAttended);
+          if (data.log.focusPercentage !== undefined) setFocusPercentage(data.log.focusPercentage);
+          if (data.log.awarenessPercentage !== undefined) setAwarenessPercentage(data.log.awarenessPercentage);
         }
       } catch (err) {
         console.error('Error loading landing data:', err);
@@ -107,6 +111,15 @@ export default function Landing() {
     } catch (err) {
       console.error('Failed to record Guru Puja:', err);
       setGuruPujaAttended(false);
+    }
+  };
+
+  const saveReflection = async (type, value) => {
+    try {
+      const payload = type === 'focus' ? { focusPercentage: value } : { awarenessPercentage: value };
+      await api.post('/sadhana/reflection', payload);
+    } catch (err) {
+      console.error('Failed to save reflection:', err);
     }
   };
 
@@ -202,6 +215,45 @@ export default function Landing() {
               <div className={`attended-status-badge ${guruPujaAttended ? 'active' : 'inactive'}`}>
                 {guruPujaAttended ? '✓ Attended' : 'Tap once'}
               </div>
+            </div>
+          </div>
+
+          {/* Daily Reflection Sliders */}
+          <div className="reflection-section animate-in" style={{ animationDelay: '0.1s' }}>
+            <h3 className="reflection-title">Was I able to do all the sadhana with focus today?</h3>
+            <div className="reflection-slider-container">
+              <input 
+                type="range" 
+                min="0" max="100" 
+                value={focusPercentage} 
+                onChange={(e) => setFocusPercentage(parseInt(e.target.value))}
+                onMouseUp={(e) => saveReflection('focus', parseInt(e.target.value))}
+                onTouchEnd={(e) => saveReflection('focus', parseInt(e.target.value))}
+                className="reflection-slider"
+              />
+              <span className="reflection-value">{focusPercentage}%</span>
+            </div>
+            <div className="reflection-labels">
+              <span>0%</span><span>100%</span>
+            </div>
+          </div>
+
+          <div className="reflection-section animate-in" style={{ animationDelay: '0.15s' }}>
+            <h3 className="reflection-title">Did I eat with awareness?</h3>
+            <div className="reflection-slider-container">
+              <input 
+                type="range" 
+                min="0" max="100" 
+                value={awarenessPercentage} 
+                onChange={(e) => setAwarenessPercentage(parseInt(e.target.value))}
+                onMouseUp={(e) => saveReflection('awareness', parseInt(e.target.value))}
+                onTouchEnd={(e) => saveReflection('awareness', parseInt(e.target.value))}
+                className="reflection-slider"
+              />
+              <span className="reflection-value">{awarenessPercentage}%</span>
+            </div>
+            <div className="reflection-labels">
+              <span>0%</span><span>100%</span>
             </div>
           </div>
 
