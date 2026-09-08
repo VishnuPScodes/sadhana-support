@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { Calendar, CircleDashed, Flame, BookOpen } from 'lucide-react';
+import { Calendar, CircleDashed, Flame, BookOpen, CheckCircle, Circle } from 'lucide-react';
 import api from '../api';
 
 export default function Landing() {
@@ -218,43 +218,43 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Daily Reflection Sliders */}
-          <div className="reflection-section animate-in" style={{ animationDelay: '0.1s' }}>
-            <h3 className="reflection-title">Was I able to do all the sadhana with focus today?</h3>
-            <div className="reflection-slider-container">
-              <input 
-                type="range" 
-                min="0" max="100" 
-                value={focusPercentage} 
-                onChange={(e) => setFocusPercentage(parseInt(e.target.value))}
-                onMouseUp={(e) => saveReflection('focus', parseInt(e.target.value))}
-                onTouchEnd={(e) => saveReflection('focus', parseInt(e.target.value))}
-                className="reflection-slider"
-              />
-              <span className="reflection-value">{focusPercentage}%</span>
-            </div>
-            <div className="reflection-labels">
-              <span>0%</span><span>100%</span>
-            </div>
+          {/* Daily Reflection Toggles */}
+          <div className="reflection-section animate-in" style={{ animationDelay: '0.1s', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 className="reflection-title" style={{ margin: 0, paddingRight: 12 }}>Was I able to do all the sadhana with focus today?</h3>
+            <button 
+              className="tick-btn"
+              onClick={() => {
+                const newVal = focusPercentage === 100 ? 0 : 100;
+                setFocusPercentage(newVal);
+                saveReflection('focus', newVal);
+              }}
+              aria-label="Toggle Focus"
+            >
+              {focusPercentage === 100 ? (
+                <CheckCircle size={28} fill="#7a6012" color="#f4efd8" />
+              ) : (
+                <Circle size={28} color="#d4c9a3" strokeWidth={1.5} />
+              )}
+            </button>
           </div>
 
-          <div className="reflection-section animate-in" style={{ animationDelay: '0.15s' }}>
-            <h3 className="reflection-title">Did I eat with awareness?</h3>
-            <div className="reflection-slider-container">
-              <input 
-                type="range" 
-                min="0" max="100" 
-                value={awarenessPercentage} 
-                onChange={(e) => setAwarenessPercentage(parseInt(e.target.value))}
-                onMouseUp={(e) => saveReflection('awareness', parseInt(e.target.value))}
-                onTouchEnd={(e) => saveReflection('awareness', parseInt(e.target.value))}
-                className="reflection-slider"
-              />
-              <span className="reflection-value">{awarenessPercentage}%</span>
-            </div>
-            <div className="reflection-labels">
-              <span>0%</span><span>100%</span>
-            </div>
+          <div className="reflection-section animate-in" style={{ animationDelay: '0.15s', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 className="reflection-title" style={{ margin: 0, paddingRight: 12 }}>Did I eat with awareness?</h3>
+            <button 
+              className="tick-btn"
+              onClick={() => {
+                const newVal = awarenessPercentage === 100 ? 0 : 100;
+                setAwarenessPercentage(newVal);
+                saveReflection('awareness', newVal);
+              }}
+              aria-label="Toggle Awareness"
+            >
+              {awarenessPercentage === 100 ? (
+                <CheckCircle size={28} fill="#7a6012" color="#f4efd8" />
+              ) : (
+                <Circle size={28} color="#d4c9a3" strokeWidth={1.5} />
+              )}
+            </button>
           </div>
 
           {/* Navigation Shortcut to Sadhana Tracker */}

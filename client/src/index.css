@@ -964,67 +964,22 @@ h1.page-title {
   font-size: 14px;
   font-weight: 500;
   color: var(--text-primary);
-  margin-bottom: 12px;
 }
 
-.reflection-slider-container {
+.tick-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.reflection-slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 2px;
-  background: var(--border);
-  outline: none;
-  border-radius: 2px;
-}
-
-.reflection-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
+  justify-content: center;
   border-radius: 50%;
-  background: #7a6012;
-  cursor: pointer;
-  transition: transform 0.1s;
-  box-shadow: 0 0 0 4px rgba(122, 96, 18, 0.1);
+  transition: transform 0.2s;
+  flex-shrink: 0;
 }
-
-.reflection-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #7a6012;
-  cursor: pointer;
-  border: none;
-  transition: transform 0.1s;
-  box-shadow: 0 0 0 4px rgba(122, 96, 18, 0.1);
-}
-
-.reflection-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-}
-
-.reflection-value {
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  color: #7a6012;
-  min-width: 44px;
-  text-align: right;
-}
-
-.reflection-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  font-size: 10px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.tick-btn:active {
+  transform: scale(0.85);
 }
 
 /* ─── Tracker Page Layout ─────────────────────────────────────────────────── */
