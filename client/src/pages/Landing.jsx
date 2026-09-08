@@ -109,23 +109,23 @@ export default function Landing() {
     }
   };
 
-  // SVG Ring calculation: r = 45 -> circumference = 283
-  const circumference = 283;
+  // SVG Ring calculation: r = 32 -> circumference = 201
+  const circumference = 201;
   const dashoffset = circumference - pressProgress * circumference;
 
   return (
     <>
       <Navbar />
-      <div className="page" style={{ paddingTop: 80 }}>
-        <div className="container-lg animate-in" style={{ maxWidth: 520 }}>
+      <div className="page" style={{ paddingTop: 70 }}>
+        <div className="container-lg animate-in" style={{ maxWidth: 440, padding: '0 8px' }}>
           {/* Header */}
           <div className="landing-hero">
-            <div className="date-badge">📅 {today}</div>
+            <div className="date-badge" style={{ fontSize: 11, padding: '4px 12px' }}>📅 {today}</div>
             <h1 className="page-title handwriting-font">
               Namaskaram 🙏
             </h1>
-            <p className="page-desc" style={{ marginBottom: 20, fontSize: 13 }}>
-              Sacred daily rituals & practice tracker
+            <p className="page-desc" style={{ marginBottom: 12, fontSize: 12 }}>
+              Daily rituals & practice tracker
             </p>
           </div>
 
@@ -135,13 +135,13 @@ export default function Landing() {
             <div className="round-action-card">
               <div className="round-btn-container">
                 {/* SVG Ring Animation */}
-                <svg className="periphery-svg" viewBox="0 0 102 102">
-                  <circle className="periphery-bg-circle" cx="51" cy="51" r="45" />
+                <svg className="periphery-svg" viewBox="0 0 74 74">
+                  <circle className="periphery-bg-circle" cx="37" cy="37" r="32" />
                   <circle
                     className="periphery-anim-circle"
-                    cx="51"
-                    cy="51"
-                    r="45"
+                    cx="37"
+                    cy="37"
+                    r="32"
                     style={{
                       strokeDashoffset: isPressingPradakshina ? dashoffset : circumference,
                     }}
