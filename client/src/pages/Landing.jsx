@@ -7,13 +7,11 @@ export default function Landing() {
   const [pradakshinaCount, setPradakshinaCount] = useState(0);
   const [guruPujaAttended, setGuruPujaAttended] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [updatingPradakshina, setUpdatingPradakshina] = useState(false);
-  const [updatingGuruPuja, setUpdatingGuruPuja] = useState(false);
 
-  // Long press animation state
+  // Long press animation & trigger tracking
   const [isPressingPradakshina, setIsPressingPradakshina] = useState(false);
   const [pressProgress, setPressProgress] = useState(0);
-  const longPressTimerRef = useRef(null);
+  const hasTriggeredRef = useRef(false);
   const animFrameRef = useRef(null);
 
   const today = new Date().toLocaleDateString('en-IN', {
@@ -23,17 +21,19 @@ export default function Landing() {
     year: 'numeric',
   });
 
-  // Fetch today's status on mount
+  // Fetch today's status & cumulative pradakshina count on mount
   useEffect(() => {
     const fetchToday = async () => {
       try {
         const { data } = await api.get('/sadhana/today');
+        if (data.pradakshinaCount !== undefined) {
+          setPradakshinaCount(data.pradakshinaCount);
+        }
         if (data.log) {
-          setPradakshinaCount(data.log.pradakshinaCount || 0);
           setGuruPujaAttended(!!data.log.guruPujaAttended);
         }
       } catch (err) {
-        console.error('Error loading today status:', err);
+        console.error('Error loading landing data:', err);
       } finally {
         setLoading(false);
       }
@@ -41,10 +41,9 @@ export default function Landing() {
     fetchToday();
   }, []);
 
-  // Handler to increment Pradakshina count
-  const handlePradakshinaIncrement = async () => {
+  // API call to increment Pradakshina count
+  const triggerPradakshinaIncrement = async () => {
     setPradakshinaCount(prev => prev + 1);
-    setUpdatingPradakshina(true);
     try {
       const { data } = await api.post('/sadhana/pradakshina', { incrementBy: 1 });
       if (data.pradakshinaCount !== undefined) {
@@ -52,16 +51,16 @@ export default function Landing() {
       }
     } catch (err) {
       console.error('Failed to update pradakshina count:', err);
-    } finally {
-      setUpdatingPradakshina(false);
     }
   };
 
-  // Long press start handler
-  const handlePradakshinaPressStart = () => {
+  // Pointer Down: Start long-press progress
+  const handlePointerDown = (e) => {
+    e.preventDefault();
     setIsPressingPradakshina(true);
+    hasTriggeredRef.current = false;
     const startTime = Date.now();
-    const duration = 700; // 700ms long press duration
+    const duration = 650; // 650ms long press duration
 
     const updateProgress = () => {
       const elapsed = Date.now() - startTime;
@@ -71,8 +70,11 @@ export default function Landing() {
       if (progress < 1) {
         animFrameRef.current = requestAnimationFrame(updateProgress);
       } else {
-        // Completed long press!
-        handlePradakshinaIncrement();
+        // Completed full long press!
+        if (!hasTriggeredRef.current) {
+          hasTriggeredRef.current = true;
+          triggerPradakshinaIncrement(); // Call ONLY ONCE (+1)
+        }
         setIsPressingPradakshina(false);
         setPressProgress(0);
       }
@@ -81,25 +83,21 @@ export default function Landing() {
     animFrameRef.current = requestAnimationFrame(updateProgress);
   };
 
-  // Long press end / cancel handler
-  const handlePradakshinaPressEnd = () => {
+  // Pointer Release / Cancel: Stop progress without incrementing if released early
+  const handlePointerUp = (e) => {
+    if (e) e.preventDefault();
     if (animFrameRef.current) {
       cancelAnimationFrame(animFrameRef.current);
-    }
-    // If released before 700ms duration finishes, treat as normal tap/click if progress was very short
-    if (isPressingPradakshina && pressProgress < 0.25 && pressProgress > 0) {
-      handlePradakshinaIncrement();
     }
     setIsPressingPradakshina(false);
     setPressProgress(0);
   };
 
-  // Handler for Guru Puja click (can be clicked only ONCE)
+  // Guru Puja click handler (once per day)
   const handleGuruPujaClick = async () => {
-    if (guruPujaAttended || updatingGuruPuja) return;
+    if (guruPujaAttended) return;
 
     setGuruPujaAttended(true);
-    setUpdatingGuruPuja(true);
     try {
       const { data } = await api.post('/sadhana/guru-puja');
       if (data.guruPujaAttended !== undefined) {
@@ -107,76 +105,65 @@ export default function Landing() {
       }
     } catch (err) {
       console.error('Failed to record Guru Puja:', err);
-      setGuruPujaAttended(false); // revert on error
-    } finally {
-      setUpdatingGuruPuja(false);
+      setGuruPujaAttended(false);
     }
   };
 
-  const circumference = 452; // 2 * PI * 72
+  // SVG Ring calculation: r = 45 -> circumference = 283
+  const circumference = 283;
   const dashoffset = circumference - pressProgress * circumference;
 
   return (
     <>
       <Navbar />
-      <div className="page" style={{ paddingTop: 90 }}>
-        <div className="container-lg animate-in">
-          {/* Hero Header */}
+      <div className="page" style={{ paddingTop: 80 }}>
+        <div className="container-lg animate-in" style={{ maxWidth: 520 }}>
+          {/* Header */}
           <div className="landing-hero">
             <div className="date-badge">📅 {today}</div>
-            <h1 className="page-title" style={{ fontSize: 'clamp(24px, 5vw, 32px)' }}>
+            <h1 className="page-title handwriting-font">
               Namaskaram 🙏
             </h1>
-            <p className="page-desc" style={{ marginBottom: 28 }}>
-              Record your sacred daily rituals and track your spiritual progress
+            <p className="page-desc" style={{ marginBottom: 20, fontSize: 13 }}>
+              Sacred daily rituals & practice tracker
             </p>
           </div>
 
-          {/* Interactive Round Buttons Grid */}
+          {/* Same-Row Interactive Buttons Grid */}
           <div className="landing-grid">
             {/* Pradakshina Card */}
             <div className="round-action-card">
               <div className="round-btn-container">
-                {/* SVG Periphery Circling Ring */}
-                <svg className="periphery-svg" viewBox="0 0 156 156">
-                  <defs>
-                    <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#fbbf24" />
-                      <stop offset="50%" stopColor="#a78bfa" />
-                      <stop offset="100%" stopColor="#34d399" />
-                    </linearGradient>
-                  </defs>
-                  <circle className="periphery-bg-circle" cx="78" cy="78" r="72" />
+                {/* SVG Ring Animation */}
+                <svg className="periphery-svg" viewBox="0 0 102 102">
+                  <circle className="periphery-bg-circle" cx="51" cy="51" r="45" />
                   <circle
-                    className={`periphery-anim-circle ${isPressingPradakshina ? 'active-press' : ''}`}
-                    cx="78"
-                    cy="78"
-                    r="72"
+                    className="periphery-anim-circle"
+                    cx="51"
+                    cy="51"
+                    r="45"
                     style={{
                       strokeDashoffset: isPressingPradakshina ? dashoffset : circumference,
                     }}
                   />
                 </svg>
 
-                {/* Round Pradakshina Button */}
+                {/* Round Pradakshina Button (Long Press ONLY) */}
                 <button
                   className={`round-btn ${isPressingPradakshina ? 'is-pressing' : ''}`}
-                  onMouseDown={handlePradakshinaPressStart}
-                  onMouseUp={handlePradakshinaPressEnd}
-                  onMouseLeave={handlePradakshinaPressEnd}
-                  onTouchStart={handlePradakshinaPressStart}
-                  onTouchEnd={handlePradakshinaPressEnd}
+                  onPointerDown={handlePointerDown}
+                  onPointerUp={handlePointerUp}
+                  onPointerLeave={handlePointerUp}
+                  onPointerCancel={handlePointerUp}
                   onClick={(e) => {
-                    // Prevent duplicate trigger if touch handled long press
-                    if (!isPressingPradakshina && pressProgress === 0) {
-                      handlePradakshinaIncrement();
-                    }
+                    e.preventDefault();
+                    e.stopPropagation();
                   }}
                   type="button"
                   aria-label="Pradakshina Counter"
                 >
                   <span className="round-btn-icon">☸️</span>
-                  <span className="round-btn-title">Pradakshina</span>
+                  <span className="round-btn-title">Hold</span>
 
                   {/* Badge counter */}
                   {pradakshinaCount > 0 && (
@@ -187,18 +174,10 @@ export default function Landing() {
                 </button>
               </div>
 
-              <h2 style={{ fontSize: 18, fontFamily: 'Cinzel, serif', color: 'var(--text-primary)', marginBottom: 6 }}>
-                Pradakshina
-              </h2>
-              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12 }}>
-                Click or long-press to record each circumambulation
+              <h2 className="round-card-title">Pradakshina</h2>
+              <p style={{ fontSize: 11, color: '#ebcc34', fontWeight: 600 }}>
+                Press & hold to record (+1)
               </p>
-
-              <div style={{ fontSize: 12, color: 'var(--amber-400)', fontWeight: 600 }}>
-                {pradakshinaCount === 0
-                  ? 'Tap or hold to start count'
-                  : `Completed ${pradakshinaCount} pradakshina${pradakshinaCount > 1 ? 's' : ''} today ✨`}
-              </div>
             </div>
 
             {/* Guru Puja Card */}
@@ -207,7 +186,7 @@ export default function Landing() {
                 <button
                   className={`round-btn ${guruPujaAttended ? 'attended' : ''}`}
                   onClick={handleGuruPujaClick}
-                  disabled={guruPujaAttended || updatingGuruPuja}
+                  disabled={guruPujaAttended}
                   type="button"
                   aria-label="Guru Puja Attended"
                 >
@@ -216,15 +195,9 @@ export default function Landing() {
                 </button>
               </div>
 
-              <h2 style={{ fontSize: 18, fontFamily: 'Cinzel, serif', color: 'var(--text-primary)', marginBottom: 6 }}>
-                Guru Puja
-              </h2>
-              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12 }}>
-                Track daily attendance (can be clicked once per day)
-              </p>
-
+              <h2 className="round-card-title">Guru Puja</h2>
               <div className={`attended-status-badge ${guruPujaAttended ? 'active' : 'inactive'}`}>
-                {guruPujaAttended ? '✓ Guru Puja Attended' : '○ Not Recorded Today'}
+                {guruPujaAttended ? '✓ Attended' : 'Tap once'}
               </div>
             </div>
           </div>

@@ -1861,16 +1861,31 @@ h1.page-title {
 }
 
 /* ─── Landing Page & Circular Action Buttons ───────────────────────── */
-.landing-hero {
-  text-align: center;
-  margin-bottom: 32px;
+:root {
+  --gold-accent: #ebcc34;
 }
 
+.handwriting-font {
+  font-family: 'Caveat', 'Patrick Hand', cursive !important;
+}
+
+.landing-hero {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.landing-hero .page-title {
+  font-family: 'Caveat', 'Patrick Hand', cursive !important;
+  font-size: clamp(28px, 6vw, 36px) !important;
+  color: var(--gold-accent) !important;
+}
+
+/* Same-row side-by-side grid for Pradakshina and Guru Puja */
 .landing-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
-  margin-bottom: 32px;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 24px;
 }
 
 .round-action-card {
@@ -1879,7 +1894,7 @@ h1.page-title {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 32px 20px;
+  padding: 20px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1890,15 +1905,15 @@ h1.page-title {
 }
 
 .round-action-card:hover {
-  border-color: rgba(167, 139, 250, 0.3);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 24px rgba(139, 92, 246, 0.15);
+  border-color: rgba(235, 204, 52, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(235, 204, 52, 0.15);
 }
 
 .round-btn-container {
   position: relative;
-  width: 140px;
-  height: 140px;
-  margin: 0 auto 20px;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1907,10 +1922,10 @@ h1.page-title {
 /* Outer periphery ring SVG animation */
 .periphery-svg {
   position: absolute;
-  top: -8px;
-  left: -8px;
-  width: 156px;
-  height: 156px;
+  top: -6px;
+  left: -6px;
+  width: 102px;
+  height: 102px;
   pointer-events: none;
   z-index: 2;
 }
@@ -1918,114 +1933,108 @@ h1.page-title {
 .periphery-bg-circle {
   fill: none;
   stroke: rgba(255, 255, 255, 0.08);
-  stroke-width: 4;
+  stroke-width: 3;
 }
 
 .periphery-anim-circle {
   fill: none;
-  stroke: url(#ring-gradient);
-  stroke-width: 6;
+  stroke: var(--gold-accent);
+  stroke-width: 5;
   stroke-linecap: round;
-  stroke-dasharray: 452; /* 2 * PI * 72 */
-  stroke-dashoffset: 452;
+  stroke-dasharray: 283; /* 2 * PI * 45 */
+  stroke-dashoffset: 283;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
   transition: stroke-dashoffset 0.05s linear;
 }
 
-.periphery-anim-circle.active-press {
-  animation: periphery-spin 1s linear infinite;
-}
-
-@keyframes periphery-spin {
-  0% { transform: rotate(-90deg); }
-  100% { transform: rotate(270deg); }
-}
-
-/* Interactive Round Button */
+/* Compact Round Button */
 .round-btn {
-  width: 130px;
-  height: 130px;
+  width: 84px;
+  height: 84px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(15, 12, 30, 0.9) 100%);
-  border: 2px solid rgba(167, 139, 250, 0.4);
+  background: radial-gradient(circle, rgba(235, 204, 52, 0.12) 0%, rgba(15, 12, 30, 0.95) 100%);
+  border: 2px solid rgba(235, 204, 52, 0.4);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 2px;
   cursor: pointer;
   outline: none;
   position: relative;
   z-index: 1;
   user-select: none;
   -webkit-user-select: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(139, 92, 246, 0.1);
+  touch-action: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(235, 204, 52, 0.1);
 }
 
 .round-btn:hover:not(:disabled) {
-  transform: scale(1.05);
-  border-color: var(--purple-400);
-  box-shadow: 0 12px 32px rgba(124, 58, 237, 0.4), inset 0 0 25px rgba(167, 139, 250, 0.2);
+  transform: scale(1.04);
+  border-color: var(--gold-accent);
+  box-shadow: 0 6px 20px rgba(235, 204, 52, 0.35);
 }
 
 .round-btn:active:not(:disabled),
 .round-btn.is-pressing {
-  transform: scale(0.96);
-  border-color: var(--amber-400);
-  box-shadow: 0 0 32px rgba(251, 191, 36, 0.6), inset 0 0 30px rgba(251, 191, 36, 0.2);
+  transform: scale(0.95);
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 24px rgba(235, 204, 52, 0.6), inset 0 0 20px rgba(235, 204, 52, 0.3);
 }
 
-/* Guru Puja completed / attended state */
 .round-btn.attended {
   background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, rgba(15, 12, 30, 0.95) 100%);
   border-color: var(--emerald-400);
-  box-shadow: 0 0 30px rgba(52, 211, 153, 0.4), inset 0 0 20px rgba(52, 211, 153, 0.2);
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
   cursor: default;
 }
 
 .round-btn-icon {
-  font-size: 36px;
+  font-size: 24px;
   line-height: 1;
-  transition: transform 0.3s ease;
-}
-
-.round-btn:hover .round-btn-icon {
-  transform: scale(1.15);
 }
 
 .round-btn-title {
-  font-family: 'Trirong', serif;
-  font-size: 13px;
-  font-weight: 600;
+  font-family: 'Caveat', 'Patrick Hand', cursive;
+  font-size: 14px;
+  font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: 0.5px;
+  line-height: 1.1;
 }
 
 .round-btn-count-badge {
   position: absolute;
   top: -4px;
   right: -4px;
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  background: var(--gold-accent);
   color: #0a0612;
   font-weight: 800;
-  font-size: 13px;
-  padding: 4px 10px;
+  font-size: 12px;
+  padding: 2px 8px;
   border-radius: 100px;
-  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
-  border: 2px solid #0f0c1e;
+  box-shadow: 0 2px 8px rgba(235, 204, 52, 0.5);
+  border: 1.5px solid #0f0c1e;
   z-index: 3;
+}
+
+.round-card-title {
+  font-family: 'Caveat', 'Patrick Hand', cursive;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
 }
 
 .attended-status-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 12px;
-  padding: 6px 14px;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 4px 10px;
   border-radius: 100px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -2043,45 +2052,46 @@ h1.page-title {
 
 /* Shortcut Card to Sadhana Tracker */
 .tracker-shortcut-card {
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(59, 130, 246, 0.08));
-  border: 1.5px solid rgba(167, 139, 250, 0.3);
+  background: linear-gradient(135deg, rgba(235, 204, 52, 0.1), rgba(124, 58, 237, 0.08));
+  border: 1.5px solid rgba(235, 204, 52, 0.3);
   border-radius: var(--radius);
-  padding: 24px 28px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   text-decoration: none;
   transition: var(--transition);
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .tracker-shortcut-card:hover {
   transform: translateY(-2px);
-  border-color: var(--purple-400);
-  box-shadow: 0 12px 32px rgba(124, 58, 237, 0.25);
+  border-color: var(--gold-accent);
+  box-shadow: 0 8px 24px rgba(235, 204, 52, 0.2);
 }
 
 .tracker-shortcut-info h3 {
-  font-family: 'Trirong', serif;
-  font-size: 18px;
-  color: var(--text-primary);
-  margin-bottom: 4px;
+  font-family: 'Caveat', 'Patrick Hand', cursive;
+  font-size: 22px;
+  color: var(--gold-accent);
+  margin-bottom: 2px;
 }
 
 .tracker-shortcut-info p {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
 }
 
 .tracker-shortcut-arrow {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--gradient-button);
+  background: var(--gold-accent);
+  color: #0a0612;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 20px;
-  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(235, 204, 52, 0.4);
 }

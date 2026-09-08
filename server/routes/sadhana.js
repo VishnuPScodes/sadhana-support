@@ -86,41 +86,42 @@ router.post('/log', auth, async (req, res) => {
   }
 });
 
-// GET /api/sadhana/today — get today's log (if any)
+// GET /api/sadhana/today — get today's log (if any) and user pradakshina count
 router.get('/today', auth, async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
     let log = await SadhanaLog.findOne({ userId: req.user._id, date: today });
+    const user = await User.findById(req.user._id).select('pradakshinaCount');
     if (!log) {
       log = {
-        pradakshinaCount: 0,
         guruPujaAttended: false,
         practices: [],
         totalScore: 0,
         isPerfectDay: false,
       };
     }
-    res.json({ log });
+    res.json({
+      log,
+      pradakshinaCount: user?.pradakshinaCount || 0,
+    });
   } catch (err) {
     console.error('Fetch today log error:', err);
     res.status(500).json({ message: 'Server error fetching log' });
   }
 });
 
-// POST /api/sadhana/pradakshina — increment or update today's pradakshina count
+// POST /api/sadhana/pradakshina — increment total pradakshina count in User schema
 router.post('/pradakshina', auth, async (req, res) => {
   try {
-    const today = new Date().toISOString().split('T')[0];
     const incrementBy = req.body.incrementBy ? parseInt(req.body.incrementBy) : 1;
-    const log = await SadhanaLog.findOneAndUpdate(
-      { userId: req.user._id, date: today },
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
       { $inc: { pradakshinaCount: incrementBy } },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { new: true }
     );
     res.json({
       message: 'Pradakshina logged! 🙏',
-      pradakshinaCount: log.pradakshinaCount,
-      log,
+      pradakshinaCount: user.pradakshinaCount,
     });
   } catch (err) {
     console.error('Pradakshina log error:', err);
