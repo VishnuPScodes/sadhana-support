@@ -24,9 +24,10 @@ export default function Navbar() {
 
   // Extensible list of navigation items
   const navItems = [
-    { path: '/tracker', label: 'Today', icon: '🧘', id: 'nav-tracker' },
-    { path: '/life-tracker', label: 'Life Journal', icon: '🌱', id: 'nav-life-tracker' },
-    { path: '/life-metrics', label: 'Life Metrics', icon: '📊', id: 'nav-life-metrics' },
+    { path: '/', label: 'Home', icon: '🏠', id: 'nav-home' },
+    { path: '/tracker', label: 'Sadhana Tracker', icon: '🧘', id: 'nav-tracker' },
+    // { path: '/life-tracker', label: 'Life Journal', icon: '🌱', id: 'nav-life-tracker' },
+    // { path: '/life-metrics', label: 'Life Metrics', icon: '📊', id: 'nav-life-metrics' },
     { path: '/select-practices', label: 'Practices', icon: '⚙️', id: 'nav-select-practices' },
     { path: '/progress', label: 'Sadhana Progress', icon: '📈', id: 'nav-progress' },
   ];

@@ -20,6 +20,8 @@ const sadhanaLogSchema = new mongoose.Schema({
   practices: [practiceEntrySchema],
   totalScore: { type: Number, default: 0 },
   isPerfectDay: { type: Boolean, default: false }, // all selected practices done ≥ once
+  pradakshinaCount: { type: Number, default: 0, min: 0 },
+  guruPujaAttended: { type: Boolean, default: false },
 }, { timestamps: true });
 
 // One log per user per day

@@ -10,8 +10,9 @@ import SelectPractices from './pages/SelectPractices';
 import Tracker from './pages/Tracker';
 import Congrats from './pages/Congrats';
 import Progress from './pages/Progress';
-import LifeTracker from './pages/LifeTracker';
-import LifeMetrics from './pages/LifeMetrics';
+import Landing from './pages/Landing';
+// import LifeTracker from './pages/LifeTracker';
+// import LifeMetrics from './pages/LifeMetrics';
 
 // Smart redirect from / based on auth state
 function RootRedirect() {
@@ -19,7 +20,7 @@ function RootRedirect() {
   if (loading) return <div className="page"><div className="spinner" style={{ width: 36, height: 36 }} /></div>;
   if (!user) return <Navigate to="/login" replace />;
   if (!user.practicesSelected) return <Navigate to="/select-practices" replace />;
-  return <Navigate to="/tracker" replace />;
+  return <Landing />;
 }
 
 function AppRoutes() {
@@ -44,6 +45,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      {/* 
       <Route
         path="/life-tracker"
         element={
@@ -60,6 +62,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      */}
       <Route
         path="/congrats"
         element={

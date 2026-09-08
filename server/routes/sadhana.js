@@ -90,11 +90,61 @@ router.post('/log', auth, async (req, res) => {
 router.get('/today', auth, async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
-    const log = await SadhanaLog.findOne({ userId: req.user._id, date: today });
+    let log = await SadhanaLog.findOne({ userId: req.user._id, date: today });
+    if (!log) {
+      log = {
+        pradakshinaCount: 0,
+        guruPujaAttended: false,
+        practices: [],
+        totalScore: 0,
+        isPerfectDay: false,
+      };
+    }
     res.json({ log });
   } catch (err) {
     console.error('Fetch today log error:', err);
     res.status(500).json({ message: 'Server error fetching log' });
+  }
+});
+
+// POST /api/sadhana/pradakshina — increment or update today's pradakshina count
+router.post('/pradakshina', auth, async (req, res) => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const incrementBy = req.body.incrementBy ? parseInt(req.body.incrementBy) : 1;
+    const log = await SadhanaLog.findOneAndUpdate(
+      { userId: req.user._id, date: today },
+      { $inc: { pradakshinaCount: incrementBy } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    res.json({
+      message: 'Pradakshina logged! 🙏',
+      pradakshinaCount: log.pradakshinaCount,
+      log,
+    });
+  } catch (err) {
+    console.error('Pradakshina log error:', err);
+    res.status(500).json({ message: 'Server error updating pradakshina' });
+  }
+});
+
+// POST /api/sadhana/guru-puja — mark guru puja as attended for today (only once)
+router.post('/guru-puja', auth, async (req, res) => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const log = await SadhanaLog.findOneAndUpdate(
+      { userId: req.user._id, date: today },
+      { $set: { guruPujaAttended: true } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    res.json({
+      message: 'Guru Puja attended recorded! 🙏',
+      guruPujaAttended: log.guruPujaAttended,
+      log,
+    });
+  } catch (err) {
+    console.error('Guru Puja log error:', err);
+    res.status(500).json({ message: 'Server error updating guru puja' });
   }
 });
 
