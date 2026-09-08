@@ -40,7 +40,9 @@ export default function Login() {
       <div className="container animate-in">
         <div className="glass-card">
           <div className="brand">
-            <div className="brand-icon" style={{ display: 'flex', justifyContent: 'center' }}><Sun size={28} strokeWidth={1.5} /></div>
+            <div className="brand-icon" style={{ padding: 4 }}>
+              <img src="/logo.png" className="logo-img" alt="Sadhana Tracker Logo" />
+            </div>
             <h1 className="brand-title">Sadhana Tracker</h1>
             <p className="brand-subtitle">Begin your daily practice journey</p>
           </div>

@@ -43,7 +43,9 @@ export default function Register() {
       <div className="container animate-in">
         <div className="glass-card">
           <div className="brand">
-            <div className="brand-icon" style={{ display: 'flex', justifyContent: 'center' }}><Sun size={28} strokeWidth={1.5} /></div>
+            <div className="brand-icon" style={{ padding: 4 }}>
+              <img src="/logo.png" className="logo-img" alt="Sadhana Tracker Logo" />
+            </div>
             <h1 className="brand-title">Create Account</h1>
             <p className="brand-subtitle">Start your sadhana journey today</p>
           </div>
