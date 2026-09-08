@@ -178,7 +178,7 @@ export default function Landing() {
               </div>
 
               <h2 className="round-card-title">Pradakshina</h2>
-              <p style={{ fontSize: 10, color: 'var(--gold-accent)', fontWeight: 500 }}>
+              <p style={{ fontSize: 10, color: '#7a6012', fontWeight: 500 }}>
                 Hold to record (+1)
               </p>
             </div>
