@@ -47,7 +47,7 @@ export default function Navbar() {
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <span className="navbar-brand" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <img src="/logo.png" style={{ width: 24, height: 24, mixBlendMode: 'multiply' }} alt="Logo" /> Sadhana Tracker
+            <Sun size={20} /> Sadhana Tracker
           </span>
         </div>
 
@@ -81,9 +81,7 @@ export default function Navbar() {
       <aside className={`nav-drawer ${menuOpen ? 'open' : ''}`}>
         <div className="nav-drawer-header">
           <div className="nav-drawer-brand">
-            <span className="brand-icon-sm" style={{ display: 'flex' }}>
-              <img src="/logo.png" style={{ width: 24, height: 24, mixBlendMode: 'multiply' }} alt="Logo" />
-            </span>
+            <span className="brand-icon-sm" style={{ display: 'flex' }}><Sun size={20} /></span>
             <div className="brand-text-sm">
               <strong>Sadhana Tracker</strong>
               <span>Daily Practice Journal</span>
