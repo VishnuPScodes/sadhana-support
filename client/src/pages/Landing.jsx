@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { Calendar, CircleDashed, Flame, BookOpen } from 'lucide-react';
 import api from '../api';
 
 export default function Landing() {
@@ -116,16 +117,18 @@ export default function Landing() {
   return (
     <>
       <Navbar />
-      <div className="page" style={{ paddingTop: 70 }}>
-        <div className="container-lg animate-in" style={{ maxWidth: 440, padding: '0 8px' }}>
+      <div className="page">
+        <div className="container-lg animate-in" style={{ maxWidth: 420, padding: '0 4px' }}>
           {/* Header */}
-          <div className="landing-hero">
-            <div className="date-badge" style={{ fontSize: 11, padding: '4px 12px' }}>📅 {today}</div>
-            <h1 className="page-title handwriting-font">
-              Namaskaram 🙏
+          <div className="landing-hero" style={{ marginBottom: 16 }}>
+            <div className="date-badge" style={{ fontSize: 11, padding: '3px 10px', marginBottom: 8, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <Calendar size={12} /> {today}
+            </div>
+            <h1 className="page-title" style={{ fontSize: 28, marginBottom: 2 }}>
+              Namaskaram
             </h1>
-            <p className="page-desc" style={{ marginBottom: 12, fontSize: 12 }}>
-              Daily rituals & practice tracker
+            <p className="page-desc" style={{ marginBottom: 14, fontSize: 12 }}>
+              Daily rituals & practice journal
             </p>
           </div>
 
@@ -162,7 +165,7 @@ export default function Landing() {
                   type="button"
                   aria-label="Pradakshina Counter"
                 >
-                  <span className="round-btn-icon">☸️</span>
+                  <span className="round-btn-icon" style={{ display: 'flex' }}><CircleDashed size={24} /></span>
                   <span className="round-btn-title">Hold</span>
 
                   {/* Badge counter */}
@@ -175,8 +178,8 @@ export default function Landing() {
               </div>
 
               <h2 className="round-card-title">Pradakshina</h2>
-              <p style={{ fontSize: 11, color: '#ebcc34', fontWeight: 600 }}>
-                Press & hold to record (+1)
+              <p style={{ fontSize: 10, color: 'var(--gold-accent)', fontWeight: 500 }}>
+                Hold to record (+1)
               </p>
             </div>
 
@@ -190,7 +193,7 @@ export default function Landing() {
                   type="button"
                   aria-label="Guru Puja Attended"
                 >
-                  <span className="round-btn-icon">🪔</span>
+                  <span className="round-btn-icon" style={{ display: 'flex' }}><Flame size={24} /></span>
                   <span className="round-btn-title">Guru Puja</span>
                 </button>
               </div>
@@ -205,8 +208,8 @@ export default function Landing() {
           {/* Navigation Shortcut to Sadhana Tracker */}
           <Link to="/tracker" className="tracker-shortcut-card" id="landing-tracker-shortcut">
             <div className="tracker-shortcut-info">
-              <h3>🧘 Today's Sadhana Tracker</h3>
-              <p>Log your daily yoga, kriya & meditation sessions</p>
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><BookOpen size={18} /> Today's Sadhana Tracker</h3>
+              <p>Log your daily yoga & kriya sessions</p>
             </div>
             <div className="tracker-shortcut-arrow">
               →

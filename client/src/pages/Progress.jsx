@@ -378,8 +378,8 @@ export default function Progress({ defaultTab }) {
   return (
     <>
       <Navbar />
-      <div className="page" style={{ paddingTop: 96, alignItems: 'flex-start' }}>
-        <div className="progress-page animate-in">
+      <div className="page" style={{ alignItems: 'flex-start' }}>
+        <div className="progress-page animate-in" style={{ maxWidth: 440, padding: '0 4px' }}>
 
           {/* Page Header */}
           <div className="progress-header">

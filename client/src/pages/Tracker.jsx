@@ -3,21 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import api from '../api';
+import { CheckCircle, Sunrise, Star, Trophy, Calendar, Hand, Wind } from 'lucide-react';
+import { PRACTICE_ICONS } from '../utils/practiceIcons';
 import { useSadhanaSound } from '../hooks/useBowlSound';
-
-const PRACTICE_ICONS = {
-  'Shoonya Meditation':   '🌌',
-  'Shambhavi Mahamudra':  '👁️',
-  'Shakti Chalana Kriya': '⚡',
-  'Surya Kriya':          '☀️',
-  'Yogasanas':            '🧘',
-  'Angamardana':          '💪',
-  'Sukha Kriya':          '🌿',
-  'Samyama Sadhana':      '🪷',
-  'Breath Watching':      '🌬️',
-  'Surya Shakti':         '🌟',
-  'Bhastrika Kriya':      '💨',
-};
 
 function getStatusLabel(count) {
   if (count === 0) return 'Tap to mark as done';
@@ -31,8 +19,8 @@ const KAPALABHATI_OPTIONS = [20, 50, 100, 150, 200];
 function KapalabhatiPicker({ value, onChange }) {
   return (
     <div className="kapalabhati-picker">
-      <div className="kapalabhati-label">
-        <span>💨</span> Kapalabhati rounds
+      <div className="kapalabhati-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <Wind size={16} /> Kapalabhati rounds
       </div>
       <div className="kapalabhati-options">
         {KAPALABHATI_OPTIONS.map(opt => (
@@ -68,7 +56,7 @@ function AlreadyDone({ log }) {
         boxShadow: '0 0 28px rgba(52, 211, 153, 0.2)',
         animation: 'glow-pulse 2s ease-in-out infinite',
       }}>
-        ✅
+        <CheckCircle size={32} />
       </div>
 
       <h1 style={{
@@ -85,7 +73,7 @@ function AlreadyDone({ log }) {
         You've already submitted your practice for today.
       </p>
       <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 28 }}>
-        Come back tomorrow to continue your journey 🌅
+        Come back tomorrow to continue your journey <Sunrise size={14} style={{ display: 'inline', marginLeft: 4 }} />
       </p>
 
       {/* Score */}
@@ -98,7 +86,7 @@ function AlreadyDone({ log }) {
           borderRadius: 100,
           marginBottom: 24,
         }}>
-          <span style={{ fontSize: 20 }}>⭐</span>
+          <span style={{ fontSize: 20, display: 'flex' }}><Star size={20} /></span>
           <span style={{
             fontFamily: 'Cinzel, serif', fontSize: 26, fontWeight: 700,
             color: 'var(--amber-400)',
@@ -116,7 +104,7 @@ function AlreadyDone({ log }) {
               border: '1px solid rgba(52,211,153,0.3)',
               borderRadius: 100, padding: '2px 10px',
             }}>
-              🏆 Perfect Day
+              <Trophy size={12} style={{ marginRight: 4 }} /> Perfect Day
             </span>
           )}
         </div>
@@ -140,7 +128,7 @@ function AlreadyDone({ log }) {
                 border: '1px solid rgba(52, 211, 153, 0.15)',
                 borderRadius: 10, fontSize: 14,
               }}>
-                <span>{PRACTICE_ICONS[p.name] || '🙏'}</span>
+                <span style={{ display: 'flex' }}>{PRACTICE_ICONS[p.name] || <Hand size={20} strokeWidth={1.5} />}</span>
                 <span style={{ flex: 1, color: 'var(--text-primary)' }}>{p.name}</span>
                 <span style={{ color: p.count === 2 ? 'var(--emerald-400)' : 'var(--amber-400)', fontWeight: 600, fontSize: 12 }}>
                   {p.count}× done
@@ -277,7 +265,7 @@ export default function Tracker() {
     return (
       <>
         <Navbar />
-        <div className="page" style={{ paddingTop: 100 }}>
+        <div className="page">
           <div className="container-lg">
             <div className="glass-card" style={{ textAlign: 'center', padding: 60 }}>
               <div className="spinner" style={{ width: 36, height: 36, margin: '0 auto 16px' }} />
@@ -308,14 +296,16 @@ export default function Tracker() {
   return (
     <>
       <Navbar />
-      <div className="page" style={{ paddingTop: 100 }}>
-        <div className="container-lg animate-in">
+      <div className="page">
+        <div className="container-lg animate-in" style={{ maxWidth: 440, padding: '0 4px' }}>
           <div className="glass-card">
             {/* Header */}
-            <div className="tracker-header">
-              <div className="date-badge">📅 {today}</div>
-              <h1 className="page-title">Today's Sadhana</h1>
-              <p className="page-desc">
+            <div className="tracker-header" style={{ marginBottom: 16 }}>
+              <div className="date-badge" style={{ fontSize: 11, padding: '3px 10px', marginBottom: 8, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <Calendar size={12} /> {today}
+              </div>
+              <h1 className="page-title handwriting-font" style={{ fontSize: 28, marginBottom: 2 }}>Today's Sadhana</h1>
+              <p className="page-desc" style={{ marginBottom: 14, fontSize: 12 }}>
                 Tap a practice once or twice to record your session
               </p>
             </div>
@@ -324,7 +314,7 @@ export default function Tracker() {
             <div className="progress-section">
               <div className="progress-label">
                 <span>Progress</span>
-                <span style={{ color: 'var(--purple-400)', fontWeight: 600 }}>
+                <span style={{ color: 'var(--gold-accent)', fontWeight: 600 }}>
                   {completedCount}/{practices.length} practices
                 </span>
               </div>
@@ -348,8 +338,8 @@ export default function Tracker() {
                     aria-label={`${practice.name}: ${getStatusLabel(practice.count)}`}
                     onKeyDown={(e) => e.key === 'Enter' && tap(index, e)}
                   >
-                    <span className="tracker-card-icon">
-                      {PRACTICE_ICONS[practice.name] || '🙏'}
+                    <span className="tracker-card-icon" style={{ display: 'flex' }}>
+                      {PRACTICE_ICONS[practice.name] || <Hand size={20} strokeWidth={1.5} />}
                     </span>
                     <div className="tracker-card-info">
                       <div className="tracker-card-name">{practice.name}</div>
@@ -382,11 +372,11 @@ export default function Tracker() {
               onClick={handleSubmit}
               disabled={submitting}
             >
-              {submitting ? <span className="spinner" /> : "✨ Submit Today's Sadhana"}
+              {submitting ? <span className="spinner" /> : "Submit Today's Sadhana"}
             </button>
 
-            <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)', marginTop: 16 }}>
-              🔁 Tap once for 1 session • Tap again for 2 sessions • Tap again to reset
+            <p style={{ textAlign: 'center', fontSize: 11, color: 'var(--text-muted)', marginTop: 14 }}>
+              Tap once for 1 session • Tap again for 2 sessions • Tap again to reset
             </p>
           </div>
         </div>

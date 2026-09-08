@@ -3,19 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import api from '../api';
+import { AlertCircle, Hand } from 'lucide-react';
+import { PRACTICE_ICONS } from '../utils/practiceIcons';
 
 const ALL_PRACTICES = [
-  { id: 'shoonya',    name: 'Shoonya Meditation',  icon: '🌌', desc: 'Inner stillness' },
-  { id: 'shambhavi', name: 'Shambhavi Mahamudra', icon: '👁️', desc: 'Mystical practice' },
-  { id: 'shakti',    name: 'Shakti Chalana Kriya',icon: '⚡', desc: 'Energy activation' },
-  { id: 'surya',     name: 'Surya Kriya',          icon: '☀️', desc: 'Solar vitality' },
-  { id: 'yogasanas', name: 'Yogasanas',             icon: '🧘', desc: 'Physical postures' },
-  { id: 'angamardana',name: 'Angamardana',          icon: '💪', desc: 'Physical fitness' },
-  { id: 'sukha',     name: 'Sukha Kriya',           icon: '🌿', desc: 'Gentle practice' },
-  { id: 'samyama',   name: 'Samyama Sadhana',       icon: '🪷', desc: 'Deep absorption' },
-  { id: 'breath',    name: 'Breath Watching',        icon: '🌬️', desc: 'Mindful breathing' },
-  { id: 'suryashakti',name: 'Surya Shakti',          icon: '🌟', desc: 'Solar energy flow' },
-  { id: 'bhastrika', name: 'Bhastrika Kriya',        icon: '💨', desc: 'Energizing breath' },
+  { id: 'shoonya',    name: 'Shoonya Meditation',  desc: 'Inner stillness' },
+  { id: 'shambhavi', name: 'Shambhavi Mahamudra', desc: 'Mystical practice' },
+  { id: 'shakti',    name: 'Shakti Chalana Kriya',desc: 'Energy activation' },
+  { id: 'surya',     name: 'Surya Kriya',          desc: 'Solar vitality' },
+  { id: 'yogasanas', name: 'Yogasanas',             desc: 'Physical postures' },
+  { id: 'angamardana',name: 'Angamardana',          desc: 'Physical fitness' },
+  { id: 'sukha',     name: 'Sukha Kriya',           desc: 'Gentle practice' },
+  { id: 'samyama',   name: 'Samyama Sadhana',       desc: 'Deep absorption' },
+  { id: 'breath',    name: 'Breath Watching',        desc: 'Mindful breathing' },
+  { id: 'suryashakti',name: 'Surya Shakti',          desc: 'Solar energy flow' },
+  { id: 'bhastrika', name: 'Bhastrika Kriya',        desc: 'Energizing breath' },
 ];
 
 export default function SelectPractices() {
@@ -63,11 +65,11 @@ export default function SelectPractices() {
   return (
     <>
       {user && <Navbar />}
-      <div className="page" style={{ paddingTop: user ? 96 : 32 }}>
-        <div className="container-lg animate-in" style={{ padding: '0 8px' }}>
+      <div className="page">
+        <div className="container-lg animate-in" style={{ maxWidth: 440, padding: '0 4px' }}>
           <div className="glass-card">
           <div className="brand">
-            <div className="brand-icon">🧘</div>
+            <div className="brand-icon" style={{ display: 'flex', justifyContent: 'center' }}><Hand size={28} strokeWidth={1.5} /></div>
             <h1 className="brand-title">
               {isEditing ? 'Edit Your Practices' : 'Your Practices'}
             </h1>
@@ -88,7 +90,7 @@ export default function SelectPractices() {
           )}
 
           {error && (
-            <div className="alert alert-error">⚠️ {error}</div>
+            <div className="alert alert-error" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><AlertCircle size={16} /> {error}</div>
           )}
 
           <div className="practices-grid">
@@ -118,7 +120,7 @@ export default function SelectPractices() {
                     {practice.desc}
                   </div>
                 </div>
-                <span className="practice-option-icon">{practice.icon}</span>
+                <span className="practice-option-icon" style={{ display: 'flex' }}>{PRACTICE_ICONS[practice.name] || <Hand size={20} />}</span>
               </div>
             ))}
           </div>

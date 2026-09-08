@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Sun, AlertCircle } from 'lucide-react';
 
 export default function Register() {
   const { register } = useAuth();
@@ -42,14 +43,14 @@ export default function Register() {
       <div className="container animate-in">
         <div className="glass-card">
           <div className="brand">
-            <div className="brand-icon">🌸</div>
+            <div className="brand-icon" style={{ display: 'flex', justifyContent: 'center' }}><Sun size={28} strokeWidth={1.5} /></div>
             <h1 className="brand-title">Create Account</h1>
             <p className="brand-subtitle">Start your sadhana journey today</p>
           </div>
 
           {error && (
-            <div className="alert alert-error">
-              <span>⚠️</span> {error}
+            <div className="alert alert-error" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <AlertCircle size={16} /> {error}
             </div>
           )}
 

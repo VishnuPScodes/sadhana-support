@@ -1,41 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Trirong:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Cinzel:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* ─── CSS Variables ─────────────────────────────────────────────────────── */
+/* ─── CSS Variables (Palm-Leaf Manuscript Theme) ───────── */
 :root {
-  --bg-primary: #0a0612;
-  --bg-secondary: #0f0c1e;
-  --bg-card: rgba(255, 255, 255, 0.04);
-  --bg-card-hover: rgba(255, 255, 255, 0.07);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(139, 92, 246, 0.4);
+  --bg-primary: #f4efd8; /* parchment beige */
+  --bg-secondary: #ebdcb2;
+  --bg-card: transparent;
+  --bg-card-hover: rgba(62, 56, 45, 0.04);
+  --border: rgba(62, 56, 45, 0.15); /* hairline */
+  --border-glow: transparent;
 
-  --text-primary: #f0eaff;
-  --text-secondary: #a89fc2;
-  --text-muted: #6b6280;
+  --text-primary: #3e382d; /* dark brown/charcoal */
+  --text-secondary: #5a5243;
+  --text-muted: #857b68;
 
-  --purple-100: #c4b5fd;
-  --purple-400: #a78bfa;
-  --purple-500: #8b5cf6;
-  --purple-600: #7c3aed;
-  --purple-700: #6d28d9;
+  --gold-accent: #c46b3e; /* terracotta */
+  --gold-main: #c46b3e;
+  --gold-100: #e8dccb;
+  --gold-400: #c46b3e;
+  --gold-500: #a75830;
+  --gold-600: #854524;
 
-  --amber-400: #fbbf24;
-  --amber-500: #f59e0b;
-  --amber-glow: rgba(251, 191, 36, 0.25);
+  /* Aliasing legacy purple tokens to earthy palette for full app harmony */
+  --purple-100: #e8dccb;
+  --purple-400: #c46b3e;
+  --purple-500: #a75830;
+  --purple-600: #854524;
+  --purple-700: #68351b;
 
-  --emerald-400: #34d399;
-  --emerald-500: #10b981;
-  --emerald-glow: rgba(52, 211, 153, 0.25);
+  --brown-title: #3e382d;
+  --brown-dark: #3e382d;
 
-  --gradient-main: linear-gradient(135deg, #1a0533 0%, #0a0612 40%, #051525 100%);
-  --gradient-card: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(59, 130, 246, 0.04));
-  --gradient-button: linear-gradient(135deg, #7c3aed, #4f46e5);
-  --gradient-button-hover: linear-gradient(135deg, #6d28d9, #4338ca);
+  --amber-400: #c46b3e;
+  --amber-500: #a75830;
+  --amber-glow: transparent;
 
-  --shadow-glow: 0 0 30px rgba(139, 92, 246, 0.15);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --radius: 16px;
-  --radius-sm: 10px;
+  --emerald-400: #5d7550; /* olive */
+  --emerald-500: #4a5e40;
+  --emerald-glow: transparent;
+
+  --gradient-main: var(--bg-primary);
+  --gradient-card: transparent;
+  --gradient-button: var(--gold-accent);
+  --gradient-button-hover: var(--gold-500);
+
+  --shadow-glow: none;
+  --shadow-card: none;
+  --radius: 8px; /* small rounded corners */
+  --radius-sm: 4px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -52,7 +63,7 @@ html, body, #root {
 }
 
 body {
-  font-family: 'Geist', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: clamp(14px, 1vw + 12px, 16px);
   background: var(--gradient-main);
   background-attachment: fixed;
@@ -62,146 +73,125 @@ body {
   overflow-x: hidden;
 }
 
-/* ─── Background Orbs ───────────────────────────────────────────────────── */
+/* ─── Background Orbs (Removed) ───────────────────────────────────────────────────── */
 body::before {
-  content: '';
-  position: fixed;
-  top: -20%;
-  left: -10%;
-  width: min(600px, 90vw);
-  height: min(600px, 90vw);
-  background: radial-gradient(circle, rgba(109, 40, 217, 0.12) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 body::after {
-  content: '';
-  position: fixed;
-  bottom: -20%;
-  right: -10%;
-  width: min(500px, 80vw);
-  height: min(500px, 80vw);
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.07) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 /* ─── Layout ────────────────────────────────────────────────────────────── */
+/* ─── Layout & Palm-Leaf Manuscript Containers ──────────────────────── */
 .page {
   position: relative;
   z-index: 1;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: clamp(72px, 10vh, 96px) clamp(12px, 4vw, 24px) clamp(24px, 5vh, 40px);
+  padding: clamp(80px, 10vh, 100px) clamp(12px, 3vw, 20px) 32px;
 }
 
 .container {
   width: 100%;
-  max-width: 460px;
+  max-width: 440px;
 }
 
 .container-lg {
   width: 100%;
-  max-width: 640px;
+  max-width: 540px;
 }
 
-/* ─── Glass Card ────────────────────────────────────────────────────────── */
+/* Palm-Leaf Manuscript Panel */
 .glass-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: clamp(20px, 5vw, 40px);
-  box-shadow: var(--shadow-card), var(--shadow-glow);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: clamp(16px, 4vw, 28px) 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   transition: var(--transition);
 }
 
 /* ─── Logo / Brand ──────────────────────────────────────────────────────── */
 .brand {
   text-align: center;
-  margin-bottom: clamp(24px, 5vw, 36px);
+  margin-bottom: 24px;
 }
 
 .brand-icon {
-  width: clamp(52px, 12vw, 64px);
-  height: clamp(52px, 12vw, 64px);
-  background: var(--gradient-button);
-  border-radius: 20px;
+  width: 44px;
+  height: 44px;
+  background: rgba(235, 204, 52, 0.1);
+  border: 1px solid rgba(235, 204, 52, 0.3);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
-  font-size: clamp(24px, 5vw, 28px);
-  box-shadow: 0 0 24px rgba(124, 58, 237, 0.5);
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  margin: 0 auto 12px;
+  font-size: 20px;
+  box-shadow: none;
 }
 
 .brand-title {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(22px, 5vw, 28px);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
   font-weight: 700;
-  background: linear-gradient(135deg, #c4b5fd, #a78bfa, #818cf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 1px;
-  margin-bottom: 6px;
+  color: var(--gold-accent);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
 }
 
 .brand-subtitle {
-  font-size: clamp(12px, 2.5vw, 14px);
+  font-size: 12px;
   color: var(--text-muted);
   letter-spacing: 0.5px;
 }
 
 /* ─── Typography ────────────────────────────────────────────────────────── */
 h1.page-title {
-  font-family: 'Trirong', serif;
-  font-size: clamp(18px, 4vw, 24px);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 5vw, 26px);
   font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 8px;
+  color: var(--gold-accent);
+  margin-bottom: 4px;
 }
 
 .page-desc {
-  font-size: clamp(12px, 2.5vw, 14px);
+  font-size: 13px;
   color: var(--text-secondary);
-  margin-bottom: clamp(20px, 4vw, 32px);
+  line-height: 1.6;
+  margin-bottom: 20px;
 }
 
 /* ─── Form Elements ─────────────────────────────────────────────────────── */
 .form-group {
-  margin-bottom: clamp(14px, 3vw, 20px);
+  margin-bottom: 16px;
 }
 
 .form-label {
   display: block;
-  font-size: clamp(11px, 2vw, 13px);
+  font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 
 .form-input {
   width: 100%;
-  padding: clamp(12px, 2.5vw, 14px) clamp(14px, 3vw, 18px);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(235, 204, 52, 0.15);
+  border-radius: 6px;
   color: var(--text-primary);
-  font-family: 'Geist', sans-serif;
-  font-size: clamp(14px, 1.2vw + 12px, 15px);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
   outline: none;
   transition: var(--transition);
 }
@@ -211,251 +201,237 @@ h1.page-title {
 }
 
 .form-input:focus {
-  border-color: var(--purple-500);
-  background: rgba(139, 92, 246, 0.08);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+  border-color: var(--gold-accent);
+  background: rgba(235, 204, 52, 0.04);
 }
 
-/* ─── Buttons ───────────────────────────────────────────────────────────── */
+/* ─── Buttons (Restrained Flat Controls) ────────────────────────────────── */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: clamp(12px, 2.5vw, 14px) clamp(18px, 4vw, 28px);
-  border-radius: var(--radius-sm);
-  font-family: 'Geist', sans-serif;
-  font-size: clamp(14px, 1.2vw + 12px, 15px);
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
   border: none;
   outline: none;
   width: 100%;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .btn-primary {
-  background: var(--gradient-button);
-  color: white;
-  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+  background: var(--gold-accent);
+  color: #0f0d0a;
+  box-shadow: none;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--gradient-button-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 28px rgba(124, 58, 237, 0.55);
+  background: #e0be2b;
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: none;
+  opacity: 0.9;
 }
 
 .btn-primary:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .btn-outline {
   background: transparent;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(235, 204, 52, 0.2);
   color: var(--text-secondary);
 }
 
 .btn-outline:hover {
-  border-color: var(--purple-500);
-  color: var(--purple-400);
-  background: rgba(139, 92, 246, 0.08);
+  border-color: var(--gold-accent);
+  color: var(--gold-accent);
+  background: rgba(235, 204, 52, 0.04);
 }
 
 /* ─── Alert / Error ─────────────────────────────────────────────────────── */
 .alert {
-  padding: 12px 16px;
-  border-radius: var(--radius-sm);
-  font-size: clamp(13px, 2.2vw, 14px);
-  margin-bottom: 20px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .alert-error {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   color: #fca5a5;
 }
 
 .alert-success {
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
   color: #6ee7b7;
 }
 
 /* ─── Links ─────────────────────────────────────────────────────────────── */
 .link-row {
   text-align: center;
-  margin-top: 24px;
-  font-size: clamp(13px, 2.2vw, 14px);
+  margin-top: 20px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 
 .link-row a {
-  color: var(--purple-400);
+  color: var(--gold-accent);
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s;
 }
 
 .link-row a:hover {
-  color: var(--purple-100);
+  text-decoration: underline;
 }
 
-/* ─── Practice Selection ────────────────────────────────────────────────── */
+/* ─── Practice Selection (Palm-Leaf Manuscript List) ───────────────────── */
 .practices-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 24px;
+  border: 1px solid rgba(235, 204, 52, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .practice-option {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: clamp(12px, 3vw, 16px) clamp(14px, 3.5vw, 20px);
-  background: rgba(255, 255, 255, 0.03);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
   cursor: pointer;
   transition: var(--transition);
-  position: relative;
-  overflow: hidden;
 }
 
-.practice-option::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--gradient-button);
-  opacity: 0;
-  transition: opacity 0.3s;
+.practice-option:last-child {
+  border-bottom: none;
 }
 
 .practice-option:hover {
-  border-color: rgba(139, 92, 246, 0.4);
-  background: rgba(139, 92, 246, 0.06);
-  transform: translateX(4px);
+  background: rgba(62, 56, 45, 0.03);
 }
 
 .practice-option.selected {
-  border-color: var(--purple-500);
-  background: rgba(139, 92, 246, 0.12);
-  box-shadow: 0 0 16px rgba(139, 92, 246, 0.2);
+  background: rgba(62, 56, 45, 0.06);
 }
 
 .practice-option-check {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  border: 1.5px solid var(--border);
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: var(--transition);
-  z-index: 1;
 }
 
 .practice-option.selected .practice-option-check {
-  background: var(--purple-500);
-  border-color: var(--purple-500);
+  background: var(--gold-accent);
+  border-color: var(--gold-accent);
+  color: #0f0d0a;
 }
 
 .practice-option-name {
-  font-size: clamp(13px, 2.5vw, 15px);
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-primary);
-  z-index: 1;
 }
 
 .practice-option-icon {
   margin-left: auto;
-  font-size: clamp(18px, 4vw, 22px);
-  z-index: 1;
+  font-size: 18px;
 }
 
-/* ─── Tracker Cards ─────────────────────────────────────────────────────── */
+/* ─── Tracker Cards (Thin Palm-Leaf Manuscript Strips) ──────────────────── */
 .tracker-header {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .date-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 16px;
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  border-radius: 100px;
-  font-size: clamp(11px, 2.2vw, 13px);
-  color: var(--purple-400);
-  margin-bottom: 16px;
+  padding: 4px 12px;
+  background: rgba(235, 204, 52, 0.06);
+  border: 1px solid rgba(235, 204, 52, 0.15);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--gold-accent);
+  margin-bottom: 12px;
 }
 
 .tracker-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 24px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .tracker-card {
   display: flex;
   align-items: center;
-  gap: clamp(10px, 3vw, 16px);
-  padding: clamp(14px, 3.5vw, 20px) clamp(14px, 4vw, 24px);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
+  gap: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  transition: var(--transition);
   user-select: none;
 }
 
+.tracker-card:last-child {
+  border-bottom: none;
+}
+
 .tracker-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(62, 56, 45, 0.03);
+  transform: none;
 }
 
 .tracker-card:active {
-  transform: scale(0.98);
+  transform: none;
 }
 
-/* State: done once (amber) */
+/* State: done once */
 .tracker-card.done-once {
-  border-color: rgba(251, 191, 36, 0.5);
-  background: rgba(251, 191, 36, 0.08);
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.12);
+  background: rgba(62, 56, 45, 0.04);
 }
 
-/* State: done twice (emerald) */
+/* State: done twice */
 .tracker-card.done-twice {
-  border-color: rgba(52, 211, 153, 0.5);
-  background: rgba(52, 211, 153, 0.08);
-  box-shadow: 0 0 20px rgba(52, 211, 153, 0.15);
+  background: rgba(52, 211, 153, 0.04);
 }
 
 .tracker-card-icon {
-  font-size: 28px;
+  font-size: 22px;
   flex-shrink: 0;
-  transition: transform 0.3s;
-}
-
-.tracker-card:active .tracker-card-icon {
-  transform: scale(1.2) rotate(10deg);
 }
 
 .tracker-card-info {
@@ -463,15 +439,14 @@ h1.page-title {
 }
 
 .tracker-card-name {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 4px;
-  transition: color 0.3s;
+  margin-bottom: 2px;
 }
 
 .tracker-card.done-once .tracker-card-name {
-  color: var(--amber-400);
+  color: var(--gold-accent);
 }
 
 .tracker-card.done-twice .tracker-card-name {
@@ -479,73 +454,63 @@ h1.page-title {
 }
 
 .tracker-card-status {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  transition: color 0.3s;
-}
-
-.tracker-card.done-once .tracker-card-status {
-  color: var(--amber-500);
-}
-
-.tracker-card.done-twice .tracker-card-status {
-  color: var(--emerald-500);
+  font-weight: 400;
 }
 
 .tracker-card-dots {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   align-items: center;
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  border: 1.5px solid var(--border);
-  transition: all 0.3s;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
 }
 
 .tracker-card.done-once .dot:first-child {
-  background: var(--amber-400);
-  border-color: var(--amber-400);
-  box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+  background: var(--gold-accent);
+  border-color: var(--gold-accent);
+  box-shadow: none;
 }
 
 .tracker-card.done-twice .dot {
   background: var(--emerald-400);
   border-color: var(--emerald-400);
-  box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
+  box-shadow: none;
 }
 
-/* ─── Progress Bar ──────────────────────────────────────────────────────── */
+/* ─── Progress Hairline Bar ─────────────────────────────────────────────── */
 .progress-section {
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .progress-label {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
 .progress-bar {
-  height: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 100px;
+  height: 3px;
+  background: rgba(235, 204, 52, 0.1);
+  border-radius: 2px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: var(--gradient-button);
-  border-radius: 100px;
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+  background: var(--gold-accent);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  box-shadow: none;
 }
 
 /* ─── Congrats Page ─────────────────────────────────────────────────────── */
@@ -576,16 +541,11 @@ h1.page-title {
 }
 
 .congrats-title {
-  font-family: 'Trirong', serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 36px;
   font-weight: 700;
-  background: linear-gradient(135deg, #fbbf24, #a78bfa, #34d399);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--gold-accent);
   margin-bottom: 12px;
-  animation: shimmer 2s linear infinite;
-  background-size: 200% auto;
 }
 
 @keyframes shimmer {
@@ -603,7 +563,7 @@ h1.page-title {
 }
 
 .congrats-sanskrit {
-  font-family: 'Trirong', serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 14px;
   color: var(--purple-400);
   letter-spacing: 2px;
@@ -659,18 +619,16 @@ h1.page-title {
   margin: 28px 0;
 }
 
-/* ─── Nav Bar ───────────────────────────────────────────────────────────── */
+/* ─── Nav Bar (Low-Profile Grounded Manuscript Header) ──────────────────── */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 10px clamp(12px, 3vw, 24px);
-  height: 60px;
-  background: rgba(10, 6, 18, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  padding: 0 16px;
+  height: 48px;
+  background: var(--bg-primary);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -680,18 +638,18 @@ h1.page-title {
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 /* Top Left Menu Toggle Icon */
 .navbar-menu-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid rgba(235, 204, 52, 0.15);
   color: var(--text-primary);
-  font-size: 18px;
+  font-size: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -701,71 +659,65 @@ h1.page-title {
 }
 
 .navbar-menu-btn:hover, .navbar-menu-btn.active {
-  background: rgba(139, 92, 246, 0.2);
-  border-color: var(--purple-500);
-  color: var(--purple-400);
+  background: rgba(235, 204, 52, 0.08);
+  border-color: var(--gold-accent);
+  color: var(--gold-accent);
 }
 
 .navbar-brand {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(15px, 3.5vw, 18px);
-  font-weight: 600;
-  background: linear-gradient(135deg, #c4b5fd, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold-accent);
   white-space: nowrap;
 }
 
 .navbar-user {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 14px;
+  gap: 10px;
+  font-size: 13px;
   color: var(--text-secondary);
 }
 
 .navbar-avatar {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: var(--gradient-button);
+  background: var(--gold-accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: white;
+  color: #0f0d0a;
 }
 
 .btn-logout {
   background: transparent;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(235, 204, 52, 0.15);
   color: var(--text-muted);
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: 'Geist', sans-serif;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
   cursor: pointer;
   transition: var(--transition);
   width: auto;
 }
 
 .btn-logout:hover {
-  border-color: rgba(239, 68, 68, 0.4);
+  border-color: rgba(239, 68, 68, 0.3);
   color: #fca5a5;
-  background: rgba(239, 68, 68, 0.08);
+  background: rgba(239, 68, 68, 0.05);
 }
 
 /* ─── Mobile Slide-Out Drawer ────────────────────────────────────────────── */
 .nav-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 990;
-  animation: fadeIn 0.2s ease-out;
 }
 
 .nav-drawer {
@@ -773,17 +725,17 @@ h1.page-title {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 280px;
-  max-width: 85vw;
-  background: #0f0b1f;
+  width: 260px;
+  max-width: 80vw;
+  background: var(--bg-primary);
   border-right: 1px solid var(--border);
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.6);
+  box-shadow: none;
   transform: translateX(-100%);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 20px 16px;
+  transition: transform 0.25s ease;
+  padding: 16px 14px;
 }
 
 .nav-drawer.open {
@@ -815,7 +767,7 @@ h1.page-title {
 }
 
 .brand-text-sm strong {
-  font-family: 'Cinzel', serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 14px;
   color: var(--purple-100);
 }
@@ -913,14 +865,17 @@ h1.page-title {
 }
 
 .drawer-link:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(62, 56, 45, 0.05);
   color: var(--text-primary);
 }
 
 .drawer-link.active {
-  background: var(--gradient-button);
-  color: white;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 700;
+  box-shadow: none;
+  border-left: 2px solid var(--gold-accent);
+  border-radius: 0;
 }
 
 .drawer-link-icon {
@@ -939,7 +894,7 @@ h1.page-title {
   border: 1px solid rgba(239, 68, 68, 0.25);
   color: #fca5a5;
   border-radius: var(--radius-sm);
-  font-family: 'Geist', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -1001,34 +956,36 @@ h1.page-title {
 /* ─── Navbar Links ───────────────────────────────────────────────────────── */
 .navbar-links {
   display: flex;
-  gap: 4px;
+  gap: 12px;
   align-items: center;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: 4px;
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 
 .nav-link {
-  padding: 7px 18px;
-  border-radius: 100px;
+  padding: 4px 0;
+  border-radius: 0;
   font-size: 13px;
   font-weight: 500;
   color: var(--text-muted);
   text-decoration: none;
   transition: var(--transition);
   white-space: nowrap;
+  border-bottom: 2px solid transparent;
 }
 
 .nav-link:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.06);
+  background: transparent;
 }
 
 .nav-link-active {
-  background: var(--gradient-button);
-  color: white !important;
-  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
+  background: transparent;
+  color: var(--text-primary) !important;
+  font-weight: 700;
+  border-bottom: 2px solid var(--gold-accent);
+  box-shadow: none;
 }
 
 /* ─── Score Badge (Congrats) ─────────────────────────────────────────────── */
@@ -1054,7 +1011,7 @@ h1.page-title {
 .score-badge-icon { font-size: 24px; }
 
 .score-badge-value {
-  font-family: 'Trirong', serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 32px;
   font-weight: 700;
   color: var(--amber-400);
@@ -1139,7 +1096,7 @@ h1.page-title {
 }
 
 .stat-value {
-  font-family: 'Trirong', serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 28px;
   font-weight: 700;
   line-height: 1;
@@ -1181,7 +1138,7 @@ h1.page-title {
   background: transparent;
   border: none;
   color: var(--text-muted);
-  font-family: 'Geist', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   cursor: pointer;
   transition: var(--transition);
@@ -1198,7 +1155,7 @@ h1.page-title {
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text-primary);
-  font-family: 'Geist', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   cursor: pointer;
   outline: none;
@@ -1257,7 +1214,7 @@ h1.page-title {
   border: 1.5px solid rgba(251, 191, 36, 0.25);
   background: rgba(251, 191, 36, 0.06);
   color: var(--text-secondary);
-  font-family: 'Geist', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -1273,10 +1230,10 @@ h1.page-title {
 }
 
 .kapalabhati-btn.active {
-  background: rgba(251, 191, 36, 0.18);
-  border-color: var(--amber-400);
-  color: var(--amber-400);
-  box-shadow: 0 0 14px rgba(251, 191, 36, 0.3);
+  background: rgba(62, 56, 45, 0.08);
+  border-color: var(--gold-accent);
+  color: var(--text-primary);
+  box-shadow: none;
   transform: translateY(-1px);
 }
 
@@ -1351,7 +1308,7 @@ h1.page-title {
   border: none;
   border-radius: 8px;
   color: white;
-  font-family: 'Geist', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -1412,9 +1369,9 @@ h1.page-title {
   align-items: center;
   justify-content: space-between;
   padding: 16px 22px;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(52, 211, 153, 0.08));
-  border: 1.5px solid rgba(139, 92, 246, 0.3);
-  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0;
   margin-bottom: 24px;
 }
 
@@ -1435,7 +1392,7 @@ h1.page-title {
 }
 
 .life-score-value {
-  font-family: 'Trirong', serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: clamp(20px, 4vw, 26px);
   font-weight: 700;
   color: var(--amber-400);
@@ -1446,7 +1403,7 @@ h1.page-title {
 
 .life-score-value small {
   font-size: 12px;
-  font-family: 'Geist', sans-serif;
+  font-family: 'Inter', sans-serif;
   color: var(--text-muted);
   font-weight: 400;
 }
@@ -1459,15 +1416,15 @@ h1.page-title {
 
 .life-question-card {
   padding: 18px 20px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0;
   transition: var(--transition);
 }
 
 .life-question-card:hover {
-  border-color: rgba(139, 92, 246, 0.35);
-  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--gold-accent);
+  background: rgba(62, 56, 45, 0.03);
 }
 
 .question-header {
@@ -1517,7 +1474,7 @@ h1.page-title {
   border: 1.5px solid var(--border);
   background: rgba(255, 255, 255, 0.03);
   color: var(--text-secondary);
-  font-family: 'Geist', sans-serif;
+  font-family: 'Inter', sans-serif;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1533,10 +1490,10 @@ h1.page-title {
 }
 
 .life-opt-btn.active {
-  background: rgba(139, 92, 246, 0.22);
-  border-color: var(--purple-500);
-  color: white;
-  box-shadow: 0 0 16px rgba(139, 92, 246, 0.35);
+  background: rgba(62, 56, 45, 0.08);
+  border-color: var(--gold-accent);
+  color: var(--text-primary);
+  box-shadow: none;
 }
 
 .opt-label {
@@ -1573,7 +1530,7 @@ h1.page-title {
   border: none;
   background: transparent;
   color: var(--text-muted);
-  font-family: 'Geist', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -1590,10 +1547,10 @@ h1.page-title {
 }
 
 .metrics-tab-btn.active {
-  background: rgba(139, 92, 246, 0.25);
-  border: 1px solid var(--purple-500);
-  color: #ffffff;
-  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35);
+  background: rgba(62, 56, 45, 0.08);
+  border: 1px solid var(--gold-accent);
+  color: var(--text-primary);
+  box-shadow: none;
 }
 
 /* ─── Scroll Reveal Animations for Life Journal ───────────────────────────── */
@@ -1726,10 +1683,10 @@ h1.page-title {
 
 
 .wizard-step-dot.active {
-  background: var(--purple-500);
-  border-color: var(--purple-400);
-  color: #fff;
-  box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+  background: var(--gold-accent);
+  border-color: var(--gold-accent);
+  color: var(--bg-primary);
+  box-shadow: none;
 }
 
 .wizard-step-dot.completed {
@@ -1787,7 +1744,7 @@ h1.page-title {
 /* ─── Real Handwriting Font Styling for Life Journal ──────────────────────── */
 .question-title,
 .handwriting-text {
-  font-family: 'Caveat', 'Patrick Hand', cursive;
+  font-family: 'Inter', sans-serif;
   font-size: clamp(22px, 5.5vw, 26px) !important;
   font-weight: 600;
   line-height: 1.35;
@@ -1796,7 +1753,7 @@ h1.page-title {
 }
 
 .opt-label {
-  font-family: 'Patrick Hand', 'Caveat', cursive;
+  font-family: 'Cormorant Garamond', serif;
   font-size: clamp(16px, 4.5vw, 19px);
   font-weight: 500;
   text-align: center;
@@ -1804,7 +1761,7 @@ h1.page-title {
 }
 
 .question-tag {
-  font-family: 'Patrick Hand', cursive;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 13px;
   font-weight: 600;
   color: var(--purple-400);
@@ -1813,7 +1770,7 @@ h1.page-title {
 }
 
 .life-summary-list .summary-item {
-  font-family: 'Caveat', cursive;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 20px;
 }
 
@@ -1866,7 +1823,7 @@ h1.page-title {
 }
 
 .handwriting-font {
-  font-family: 'Caveat', 'Patrick Hand', cursive !important;
+  font-family: 'Cormorant Garamond', serif !important;
 }
 
 .landing-hero {
@@ -1875,9 +1832,9 @@ h1.page-title {
 }
 
 .landing-hero .page-title {
-  font-family: 'Caveat', 'Patrick Hand', cursive !important;
+  font-family: 'Cormorant Garamond', serif !important;
   font-size: clamp(26px, 6vw, 32px) !important;
-  color: var(--gold-accent) !important;
+  color: #7a6012 !important; /* Dark golden brown for contrast > 4.5 against #f4efd8 */
   margin-bottom: 2px;
 }
 
@@ -1891,11 +1848,12 @@ h1.page-title {
 }
 
 .round-action-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 14px;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-right: 1px solid var(--border);
+  border-radius: 0;
   padding: 14px 6px;
   display: flex;
   flex-direction: column;
@@ -1906,9 +1864,13 @@ h1.page-title {
   position: relative;
 }
 
+.round-action-card:last-child {
+  border-right: none;
+}
+
 .round-action-card:hover {
-  border-color: rgba(235, 204, 52, 0.4);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  border-color: var(--border);
+  box-shadow: none;
 }
 
 .round-btn-container {
@@ -1955,8 +1917,8 @@ h1.page-title {
   width: 62px;
   height: 62px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(235, 204, 52, 0.12) 0%, rgba(15, 12, 30, 0.95) 100%);
-  border: 1.5px solid rgba(235, 204, 52, 0.4);
+  background: transparent;
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1970,20 +1932,22 @@ h1.page-title {
   -webkit-user-select: none;
   touch-action: none;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
+  color: var(--text-primary);
 }
 
 .round-btn:active:not(:disabled),
 .round-btn.is-pressing {
   transform: scale(0.94);
   border-color: var(--gold-accent);
-  box-shadow: 0 0 16px rgba(235, 204, 52, 0.6);
+  box-shadow: none;
+  background: rgba(62, 56, 45, 0.04);
 }
 
 .round-btn.attended {
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, rgba(15, 12, 30, 0.95) 100%);
+  background: rgba(52, 211, 153, 0.1);
   border-color: var(--emerald-400);
-  box-shadow: 0 0 16px rgba(52, 211, 153, 0.4);
+  box-shadow: none;
   cursor: default;
 }
 
@@ -1993,7 +1957,7 @@ h1.page-title {
 }
 
 .round-btn-title {
-  font-family: 'Caveat', 'Patrick Hand', cursive;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 11px;
   font-weight: 700;
   color: var(--text-primary);
@@ -2016,7 +1980,7 @@ h1.page-title {
 }
 
 .round-card-title {
-  font-family: 'Caveat', 'Patrick Hand', cursive;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
@@ -2048,26 +2012,28 @@ h1.page-title {
 
 /* Shortcut Card to Sadhana Tracker */
 .tracker-shortcut-card {
-  background: linear-gradient(135deg, rgba(235, 204, 52, 0.1), rgba(124, 58, 237, 0.08));
-  border: 1.5px solid rgba(235, 204, 52, 0.3);
-  border-radius: 14px;
-  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  padding: 16px 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   text-decoration: none;
   transition: var(--transition);
-  margin-top: 4px;
+  margin-top: 12px;
 }
 
 .tracker-shortcut-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--gold-accent);
-  box-shadow: 0 6px 18px rgba(235, 204, 52, 0.2);
+  transform: none;
+  border-color: var(--border);
+  box-shadow: none;
+  background: rgba(62, 56, 45, 0.03);
 }
 
 .tracker-shortcut-info h3 {
-  font-family: 'Caveat', 'Patrick Hand', cursive;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 19px;
   color: var(--gold-accent);
   margin-bottom: 1px;

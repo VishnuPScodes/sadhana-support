@@ -3,19 +3,8 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 
-const PRACTICE_ICONS = {
-  'Shoonya Meditation':   '🌌',
-  'Shambhavi Mahamudra':  '👁️',
-  'Shakti Chalana Kriya': '⚡',
-  'Surya Kriya':          '☀️',
-  'Yogasanas':            '🧘',
-  'Angamardana':          '💪',
-  'Sukha Kriya':          '🌿',
-  'Samyama Sadhana':      '🪷',
-  'Breath Watching':      '🌬️',
-  'Surya Shakti':         '🌟',
-  'Bhastrika Kriya':      '💨',
-};
+import { Hand, Star, Trophy, Wind, Sunrise, LineChart } from 'lucide-react';
+import { PRACTICE_ICONS } from '../utils/practiceIcons';
 
 const SCORE_ONCE = 10;
 const SCORE_TWICE = 25;
@@ -120,12 +109,12 @@ export default function Congrats() {
   return (
     <>
       <Navbar />
-      <div className="page" style={{ minHeight: '100vh', alignItems: 'center', paddingTop: 96 }}>
+      <div className="page" style={{ minHeight: '100vh', alignItems: 'center' }}>
         <canvas ref={canvasRef} className="congrats-canvas" />
 
       <div className="container-lg animate-in">
         <div className="glass-card congrats-content">
-          <span className="congrats-emoji">🙏</span>
+          <span className="congrats-emoji" style={{ display: 'flex', justifyContent: 'center' }}><Hand size={36} strokeWidth={1.5} /></span>
 
           <h1 className="congrats-title">Sadhana Complete!</h1>
 
@@ -139,13 +128,13 @@ export default function Congrats() {
           {/* Score Badge */}
           <div className="score-badge-row">
             <div className="score-badge">
-              <span className="score-badge-icon">⭐</span>
+              <span className="score-badge-icon" style={{ display: 'flex' }}><Star size={20} /></span>
               <span className="score-badge-value">{totalScore}</span>
               <span className="score-badge-label">points earned</span>
             </div>
             {isPerfectDay && (
               <div className="perfect-day-badge">
-                🏆 Perfect Day! <span style={{ fontSize: 11, opacity: 0.8 }}>+20 bonus</span>
+                <Trophy size={14} style={{ display: 'inline', marginRight: 4 }} /> Perfect Day! <span style={{ fontSize: 11, opacity: 0.8 }}>+20 bonus</span>
               </div>
             )}
           </div>
@@ -165,12 +154,12 @@ export default function Congrats() {
 
               {donePractices.map(p => (
                 <div key={p.name} className="summary-item">
-                  <span>{PRACTICE_ICONS[p.name] || '🙏'}</span>
+                  <span style={{ display: 'flex' }}>{PRACTICE_ICONS[p.name] || <Hand size={20} />}</span>
                   <div style={{ flex: 1 }}>
                     <div>{p.name}</div>
                     {p.name === 'Shakti Chalana Kriya' && p.kapalabhatiCount && (
                       <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
-                        💨 {p.kapalabhatiCount} kapalabhatis
+                        <Wind size={12} style={{ display: 'inline', marginRight: 4 }} /> {p.kapalabhatiCount} kapalabhatis
                         {KAPALABHATI_SCORES[p.kapalabhatiCount] && (
                           <span style={{ color: 'var(--amber-400)', marginLeft: 6 }}>
                             +{KAPALABHATI_SCORES[p.kapalabhatiCount]} pts bonus
@@ -211,7 +200,7 @@ export default function Congrats() {
               className="btn btn-primary"
               onClick={() => navigate('/tracker')}
             >
-              🌅 New Day
+              <Sunrise size={18} style={{ display: 'inline', marginRight: 8 }} /> New Day
             </button>
             <Link
               to="/progress"
@@ -219,7 +208,7 @@ export default function Congrats() {
               id="congrats-progress-btn"
               style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-              📈 View Progress
+              <LineChart size={18} style={{ display: 'inline', marginRight: 8 }} /> View Progress
             </Link>
           </div>
 

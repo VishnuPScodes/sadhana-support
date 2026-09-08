@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { Home, BookOpen, Settings, LineChart, Menu, X, Sun, LogOut } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -24,12 +25,12 @@ export default function Navbar() {
 
   // Extensible list of navigation items
   const navItems = [
-    { path: '/', label: 'Home', icon: '🏠', id: 'nav-home' },
-    { path: '/tracker', label: 'Sadhana Tracker', icon: '🧘', id: 'nav-tracker' },
+    { path: '/', label: 'Home', icon: <Home size={18} strokeWidth={1.5} />, id: 'nav-home' },
+    { path: '/tracker', label: 'Sadhana Tracker', icon: <BookOpen size={18} strokeWidth={1.5} />, id: 'nav-tracker' },
     // { path: '/life-tracker', label: 'Life Journal', icon: '🌱', id: 'nav-life-tracker' },
     // { path: '/life-metrics', label: 'Life Metrics', icon: '📊', id: 'nav-life-metrics' },
-    { path: '/select-practices', label: 'Practices', icon: '⚙️', id: 'nav-select-practices' },
-    { path: '/progress', label: 'Sadhana Progress', icon: '📈', id: 'nav-progress' },
+    { path: '/select-practices', label: 'Practices', icon: <Settings size={18} strokeWidth={1.5} />, id: 'nav-select-practices' },
+    { path: '/progress', label: 'Sadhana Progress', icon: <LineChart size={18} strokeWidth={1.5} />, id: 'nav-progress' },
   ];
 
   return (
@@ -43,9 +44,11 @@ export default function Navbar() {
             aria-label="Toggle Navigation Menu"
             id="navbar-toggle-btn"
           >
-            {menuOpen ? '✕' : '☰'}
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <span className="navbar-brand">🔱 Sadhana Tracker</span>
+          <span className="navbar-brand" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Sun size={20} /> Sadhana Tracker
+          </span>
         </div>
 
         {/* Desktop inline nav links */}
@@ -57,7 +60,7 @@ export default function Navbar() {
               className={`nav-link ${isActive(item.path) ? 'nav-link-active' : ''}`}
               id={item.id}
             >
-              {item.icon} {item.label}
+              <span style={{ display: 'flex' }}>{item.icon}</span> {item.label}
             </Link>
           ))}
         </div>
@@ -78,14 +81,14 @@ export default function Navbar() {
       <aside className={`nav-drawer ${menuOpen ? 'open' : ''}`}>
         <div className="nav-drawer-header">
           <div className="nav-drawer-brand">
-            <span className="brand-icon-sm">🔱</span>
+            <span className="brand-icon-sm" style={{ display: 'flex' }}><Sun size={20} /></span>
             <div className="brand-text-sm">
               <strong>Sadhana Tracker</strong>
               <span>Daily Practice Journal</span>
             </div>
           </div>
           <button className="btn-close-drawer" onClick={() => setMenuOpen(false)} aria-label="Close Menu">
-            ✕
+            <X size={20} />
           </button>
         </div>
 
@@ -113,8 +116,8 @@ export default function Navbar() {
         </div>
 
         <div className="nav-drawer-footer">
-          <button className="btn-drawer-logout" onClick={handleLogout}>
-            <span>🚪</span> Logout
+          <button className="btn-drawer-logout" onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <LogOut size={16} /> Logout
           </button>
         </div>
       </aside>

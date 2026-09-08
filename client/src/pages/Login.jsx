@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Sun, AlertCircle } from 'lucide-react';
 
 export default function Login() {
   const { login } = useAuth();
@@ -39,14 +40,14 @@ export default function Login() {
       <div className="container animate-in">
         <div className="glass-card">
           <div className="brand">
-            <div className="brand-icon">🔱</div>
+            <div className="brand-icon" style={{ display: 'flex', justifyContent: 'center' }}><Sun size={28} strokeWidth={1.5} /></div>
             <h1 className="brand-title">Sadhana Tracker</h1>
             <p className="brand-subtitle">Begin your daily practice journey</p>
           </div>
 
           {error && (
-            <div className="alert alert-error">
-              <span>⚠️</span> {error}
+            <div className="alert alert-error" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <AlertCircle size={16} /> {error}
             </div>
           )}
 
