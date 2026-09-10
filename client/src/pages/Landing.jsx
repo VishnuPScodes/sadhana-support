@@ -127,6 +127,17 @@ export default function Landing() {
   const circumference = 201;
   const dashoffset = circumference - pressProgress * circumference;
 
+  if (loading) {
+    return (
+      <div className="yogic-loader-container">
+        <div className="yogic-breathing-circle">
+          <img src="/logo.png" className="yogic-loader-icon" alt="Meditating" />
+        </div>
+        <p className="yogic-loader-text">Breathing in...</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <Navbar />
